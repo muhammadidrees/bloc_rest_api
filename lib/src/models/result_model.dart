@@ -1,7 +1,7 @@
 part of 'models.dart';
 
 /// A model class need to extend the result model class
-abstract class ResultModel extends Equatable {
+abstract class ResultModel {
   /// Converts model to json
   @required
   ResultModel fromJson(Map<String, dynamic> json);

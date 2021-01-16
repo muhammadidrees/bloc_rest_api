@@ -1,7 +1,7 @@
 part of 'models.dart';
 
 // data model must extend the ResultModel class and overide it's methods
-class PostModel extends ResultModel {
+class PostModel extends ResultModel with EquatableMixin {
   PostModel({
     this.userId,
     this.id,

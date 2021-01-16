@@ -73,7 +73,12 @@ class HomePage extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
 
             case RequestStatus.success:
-              return Center(child: Text(state.model.toString()));
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(32.0),
+                  child: Text(state.model.toString()),
+                ),
+              );
 
             case RequestStatus.failure:
               return Center(child: Text(state.errorMessage));
