@@ -2,25 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:bloc_rest_api/src/api_config.dart';
+import 'package:bloc_rest_api/src/models/models.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
-
-import 'api_config.dart';
-import 'models/models.dart';
 
 /// General Repository to interact with the API format
 /// as provided by Mazhar Bhai
 class GereralResponseRepository {
   /// Used to initiate a [GET] request
   ///
-  /// The [endpoint] is end point that will be attached to the [baseUrl]
+  /// The [handle] is end point that will be attached to the [baseUrl]
   /// which either can be provided as a whole using the [ApiConfig]
   /// setting or can be overidden as it is given as an option parameter
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
   Future<dynamic> get({
-    @required String endpoint,
+    @required String handle,
     String baseUrl,
     Map<String, String> header,
   }) async {
@@ -32,7 +31,7 @@ class GereralResponseRepository {
     try {
       final response = await http
           .get(
-            (baseUrl ?? ApiConfig.baseUrl) + endpoint,
+            (baseUrl ?? ApiConfig.baseUrl) + handle,
             headers: header ?? ApiConfig.header,
           )
           .timeout(ApiConfig.responseTimeOut);
@@ -49,14 +48,14 @@ class GereralResponseRepository {
   ///
   /// Use the [body] parameter to send the json data to the service
   ///
-  /// The [endpoint] is end point that will be attached to the [baseUrl]
+  /// The [handle] is end point that will be attached to the [baseUrl]
   /// which either can be provided as a whole using the [ApiConfig]
   /// setting or can be overidden as it is given as an option parameter
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
   Future<dynamic> post({
-    @required String endpoint,
+    @required String handle,
     String body,
     String baseUrl,
     Map<String, String> header,
@@ -69,7 +68,7 @@ class GereralResponseRepository {
     var responseJson;
     try {
       final response = await http
-          .post((baseUrl ?? ApiConfig.baseUrl) + endpoint,
+          .post((baseUrl ?? ApiConfig.baseUrl) + handle,
               body: body, headers: header ?? ApiConfig.header)
           .timeout(ApiConfig.responseTimeOut);
       responseJson = _response(response);
