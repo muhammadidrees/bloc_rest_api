@@ -1,7 +1,7 @@
 part of 'cubits.dart';
 
-class RequestCubit<T extends ResultModel> extends Cubit<RequestState<T>> {
-  RequestCubit({@required this.model}) : super(RequestState<T>.empty());
+class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
+  RequestCubit({@required this.model}) : super(RequestState.empty());
   final T model;
 
   void emitCurrentState() {
@@ -21,15 +21,15 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState<T>> {
     String baseUrl,
     Map<String, String> header,
   }) async {
-    emit(RequestState<T>.loading());
+    emit(RequestState.loading());
     await GereralResponseRepository()
         .get(handle: handle, baseUrl: baseUrl, header: header)
         .then((value) {
       var apiResponse = model.fromJson(value);
 
-      emit(RequestState<T>.success(apiResponse));
+      emit(RequestState.success(apiResponse));
     }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
+      emit(RequestState.failure(error.toString()));
     });
   }
 
@@ -39,15 +39,15 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState<T>> {
     Map<String, String> header,
     String body,
   }) async {
-    emit(RequestState<T>.loading());
+    emit(RequestState.loading());
     await GereralResponseRepository()
         .post(handle: handle, baseUrl: baseUrl, header: header, body: body)
         .then((value) {
       var apiResponse = model.fromJson(value);
 
-      emit(RequestState<T>.success(apiResponse));
+      emit(RequestState.success(apiResponse));
     }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
+      emit(RequestState.failure(error.toString()));
     });
   }
 }

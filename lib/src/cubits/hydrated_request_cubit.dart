@@ -1,6 +1,6 @@
 part of 'cubits.dart';
 
-class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState<T>>
+class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState>
     with HydratedMixin {
   HydratedRequestCubit({@required this.model}) : super(RequestState.empty()) {
     hydrate();
@@ -31,7 +31,7 @@ class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState<T>>
         .then((value) {
       var apiResponse = model.fromJson(value);
 
-      emit(RequestState<T>.success(apiResponse));
+      emit(RequestState.success(apiResponse));
     }).catchError((error) {
       emit(RequestState.failure(error.toString()));
     });
@@ -43,20 +43,20 @@ class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState<T>>
     Map<String, String> header,
     String body,
   }) async {
-    emit(RequestState<T>.loading());
+    emit(RequestState.loading());
     GereralResponseRepository()
         .post(handle: handle, baseUrl: baseUrl, header: header, body: body)
         .then((value) {
       var apiResponse = model.fromJson(value);
 
-      emit(RequestState<T>.success(apiResponse));
+      emit(RequestState.success(apiResponse));
     }).catchError((error) {
       emit(RequestState.failure(error.toString()));
     });
   }
 
   @override
-  RequestState<T> fromJson(Map<String, dynamic> json) => RequestState<T>._(
+  RequestState fromJson(Map<String, dynamic> json) => RequestState._(
         status: json["status"] == null
             ? null
             : enumFromString(json["status"].toString()),
@@ -64,7 +64,7 @@ class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState<T>>
       );
 
   @override
-  Map<String, dynamic> toJson(RequestState<T> state) => {
+  Map<String, dynamic> toJson(RequestState state) => {
         "status": state?.status?.toString() ?? RequestState.empty(),
         "model": state?.model?.toJson() ?? null,
       };
