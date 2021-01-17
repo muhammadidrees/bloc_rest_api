@@ -58,7 +58,7 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<RequestCubit<PostModel>>().getRequest(
-                handle: "posts/1",
+                handle: "posts",
               );
         },
         child: Icon(Icons.add),
