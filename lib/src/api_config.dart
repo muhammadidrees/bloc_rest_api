@@ -8,7 +8,7 @@ class ApiConfig {
   static String baseUrl = "";
 
   /// header for the project
-  static Map<String, String> header = {};
+  static Map<String, String> header;
 
   /// duration for timeout request
   static Duration responseTimeOut = Duration(seconds: 10);

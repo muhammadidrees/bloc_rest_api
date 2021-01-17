@@ -36,7 +36,7 @@ class GereralResponseRepository {
             (baseUrl ?? ApiConfig.baseUrl) + handle,
             headers: header ?? ApiConfig.header,
           )
-          .timeout(ApiConfig.responseTimeOut);
+          ?.timeout(ApiConfig.responseTimeOut);
       responseJson = _response(response);
     } on SocketException {
       throw FetchDataException();
