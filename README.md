@@ -181,7 +181,7 @@ void main() async {
 }
 ```
 
-And now you're state will never go away. :P
+And now you're state will never go away. :)
 ## Maintainers
 
 - [Muhammad Idrees](https://github.com/muhammadIdrees)
