@@ -1,8 +1,8 @@
 name: bloc_rest_api
-description: A generic package to implement REST APIs easily in flutter.
-version: 0.0.1
-author:
-homepage:
+description: A generic bloc package to implement REST APIs easily in flutter.
+version: 0.1.0
+author: Muhammad Idrees <midrees097@gmail.com>
+homepage: https://github.com/muhammadidrees/bloc_rest_api
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
