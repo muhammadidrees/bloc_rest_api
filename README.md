@@ -2,7 +2,7 @@
 
 A flutter package to easily interegrate and manage REST APIs. Now all you need to do is create a model class and all the rest is taken care of. :)
 
-> Before using the package fimiliarize yourself with [bloc library](https://bloclibrary.dev/#/)Api
+> Before using the package fimiliarize yourself with [bloc library](https://bloclibrary.dev/#/)
 
 ## Usage
 
