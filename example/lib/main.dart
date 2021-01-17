@@ -26,6 +26,12 @@ class App extends StatelessWidget {
             (json) => PostModel.fromJson(json),
           ),
         ),
+        BlocProvider(
+          create: (context) => HydratedRequestCubit<PostModel>(
+            fromMap: (json) => PostModel.fromJson(json),
+            toMap: (model) => model.toJson(),
+          ),
+        ),
         // for list of posts simply update type and fromMap method
         BlocProvider(
           create: (context) => RequestCubit<List<PostModel>>(

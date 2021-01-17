@@ -1,6 +1,7 @@
 part of 'cubits.dart';
 
-class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
+class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
+    with HydratedMixin {
   HydratedRequestCubit({
     @required this.fromMap,
     @required this.toMap,
@@ -8,7 +9,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
   })  : this.httpClient = httpClient ?? http.Client(),
         assert(fromMap != null, "FromMap function cannot be null"),
         assert(toMap != null, "toMap function cannot be null"),
-        super(RequestState.empty()) {
+        super(RequestState<T>.empty()) {
     hydrate();
   }
 
@@ -28,11 +29,11 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
   }
 
   void emptyCubit() {
-    emit(RequestState.empty());
+    emit(RequestState<T>.empty());
   }
 
   void updateModel(T model) {
-    emit(RequestState.success(model));
+    emit(RequestState<T>.success(model));
   }
 
   /// Used to initiate a [GET] request
@@ -48,7 +49,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
     String baseUrl,
     Map<String, String> header,
   }) async {
-    emit(RequestState.loading());
+    emit(RequestState<T>.loading());
     await GereralResponseRepository()
         .get(
       httpClient,
@@ -60,7 +61,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
       T apiResponse = fromMap(value);
       emit(RequestState<T>.success(apiResponse));
     }).catchError((error) {
-      emit(RequestState.failure(error.toString()));
+      emit(RequestState<T>.failure(error.toString()));
     });
   }
 
@@ -80,7 +81,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
     Map<String, String> header,
     String body,
   }) async {
-    emit(RequestState.loading());
+    emit(RequestState<T>.loading());
     GereralResponseRepository()
         .post(
       httpClient,
@@ -93,12 +94,12 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
       T apiResponse = fromMap(value);
       emit(RequestState<T>.success(apiResponse));
     }).catchError((error) {
-      emit(RequestState.failure(error.toString()));
+      emit(RequestState<T>.failure(error.toString()));
     });
   }
 
   @override
-  RequestState fromJson(Map<String, dynamic> json) => RequestState._(
+  RequestState<T> fromJson(Map<String, dynamic> json) => RequestState<T>._(
         status: json["status"] == null
             ? null
             : enumFromString(json["status"].toString()),
@@ -106,8 +107,8 @@ class HydratedRequestCubit<T> extends Cubit<RequestState> with HydratedMixin {
       );
 
   @override
-  Map<String, dynamic> toJson(RequestState state) => {
-        "status": state?.status?.toString() ?? RequestState.empty(),
+  Map<String, dynamic> toJson(RequestState<T> state) => {
+        "status": state?.status?.toString() ?? RequestState<T>.empty(),
         "model": state?.model == null ? null : toMap(state.model),
       };
 

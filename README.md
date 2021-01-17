@@ -98,6 +98,15 @@ context.read<RequestCubit<PostModel>>().getRequest(
 
 Finally react on the states by using either `BlocBuilder`, `BlocListner` or `BlocConsumer` method.
 
+States can be one of four and can be distinguished by state.status:
+     
+1. RequestState.empty: Initial State
+2. RequestState.loading: Loading State
+3. RequestState.success: Success State
+4. RequestState.error: Error State
+
+Heres is an example builder method for PostModel:
+
 ```dart
 BlocBuilder<RequestCubit<PostModel>, RequestState<PostModel>>(
   builder: (context, state) {
@@ -135,6 +144,44 @@ ApiConfig.header = {"...": ""};
 ApiConfig.responseTimeOut = Duration(...);
 ```
 
+#### Other Userful Methods
+
+You can use the updateModel method to update the state model manually.
+
+```dart
+context.read<RequestCubit<PostModel>>().updateModel(model);
+```
+
+Also you can empty or reinitialize the state using empty() method.
+
+```dart
+context.read<RequestCubit<PostModel>>().emtpy();
+```
+
+### Presisting REST APIs
+
+Sometimes you want to presist the api data. For that you can simply replace the `RequestCubit` to `HydratedRequestCubit`.
+
+Just make sure to provide fromMap and toMap functions in the provider.
+```dart
+BlocProvider(
+  create: (context) => HydratedRequestCubit<PostModel>(
+    fromMap: (json) => PostModel.fromJson(json),
+    toMap: (model) => model.toJson(),
+  ),
+),
+```
+
+And also initialize the storage
+```dart
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  HydratedBloc.storage = await HydratedStorage.build();
+  runApp(App());
+}
+```
+
+And now you're state will never go away. :P
 ## Maintainers
 
 - [Muhammad Idrees](https://github.com/muhammadIdrees)
