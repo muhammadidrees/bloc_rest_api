@@ -1,7 +1,6 @@
 part of 'models.dart';
 
-// data model must extend the ResultModel class and overide it's methods
-class PostModel extends ResultModel with EquatableMixin {
+class PostModel extends Equatable {
   PostModel({
     this.userId,
     this.id,
@@ -28,14 +27,6 @@ class PostModel extends ResultModel with EquatableMixin {
       );
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-        userId: json["userId"] == null ? null : json["userId"],
-        id: json["id"] == null ? null : json["id"],
-        title: json["title"] == null ? null : json["title"],
-        body: json["body"] == null ? null : json["body"],
-      );
-
-  @override
-  PostModel fromJson(Map<String, dynamic> json) => PostModel(
         userId: json["userId"] == null ? null : json["userId"],
         id: json["id"] == null ? null : json["id"],
         title: json["title"] == null ? null : json["title"],

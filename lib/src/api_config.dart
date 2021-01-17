@@ -1,8 +1,9 @@
-/// Set up api related stuff to be used later on
+/// Configure REST API properties to be used later on
 /// thoroughout API calls
 ///
 /// Though for a specific use case these can also be
-/// overriden in API call functions
+/// overriden in API call functions it [getRequest()]
+/// and [postRequest()]
 class ApiConfig {
   /// base url for the project
   static String baseUrl = "";

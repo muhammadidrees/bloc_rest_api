@@ -1,14 +1,19 @@
 part of 'cubits.dart';
 
-class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
-  RequestCubit({
-    @required this.model,
+class RequestCubit<T> extends Cubit<RequestState<T>> {
+  RequestCubit(
+    this.fromMap, {
     HttpClient httpClient,
   })  : this.httpClient = httpClient ?? http.Client(),
-        super(RequestState.empty());
+        assert(fromMap != null, "FromMap function cannot be null"),
+        super(RequestState<T>.empty());
 
-  final T model;
+  /// for testing
   final http.Client httpClient;
+
+  /// A function that converts the given [json] map to
+  /// [T] type model
+  final T Function(dynamic json) fromMap;
 
   /// Emits current state of bloc
   void emitCurrentState() {
@@ -17,19 +22,27 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
 
   /// Empties out the bloc and emits the empty state
   void emptyCubit() {
-    emit(RequestState.empty());
+    emit(RequestState<T>.empty());
   }
 
   void updateModel(T model) {
-    emit(RequestState.success(model));
+    emit(RequestState<T>.success(model));
   }
 
+  /// Used to initiate a [GET] request
+  ///
+  /// The [handle] is end point that will be attached to the [baseUrl]
+  /// which either can be provided as a whole using the [ApiConfig]
+  /// setting or can be overidden as it is given as an option parameter
+  /// in the function.
+  ///
+  /// Same thing applies for the [header] parameter
   void getRequest({
     @required String handle,
     String baseUrl,
     Map<String, String> header,
   }) async {
-    emit(RequestState.loading());
+    emit(RequestState<T>.loading());
     await GereralResponseRepository()
         .get(
       httpClient,
@@ -38,25 +51,30 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
       header: header,
     )
         .then((value) {
-      var apiResponse;
-      if (value is List) {
-        apiResponse = List<T>.from(value.map((x) => model.fromJson(x)));
-      } else {
-        apiResponse = model.fromJson(value);
-      }
-      emit(RequestState.success(apiResponse));
+      T apiResponse = fromMap(value);
+      emit(RequestState<T>.success(apiResponse));
     }).catchError((error) {
-      emit(RequestState.failure(error.toString()));
+      emit(RequestState<T>.failure(error.toString()));
     });
   }
 
+  /// Used to initiate a [POST] request
+  ///
+  /// Use the [body] parameter to send the json data to the service
+  ///
+  /// The [handle] is end point that will be attached to the [baseUrl]
+  /// which either can be provided as a whole using the [ApiConfig]
+  /// setting or can be overidden as it is given as an option parameter
+  /// in the function.
+  ///
+  /// Same thing applies for the [header] parameter
   void postRequest({
     @required String handle,
     String baseUrl,
     Map<String, String> header,
     String body,
   }) async {
-    emit(RequestState.loading());
+    emit(RequestState<T>.loading());
     await GereralResponseRepository()
         .post(
       httpClient,
@@ -66,16 +84,10 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
       body: body,
     )
         .then((value) {
-      var apiResponse;
-      if (value is List) {
-        apiResponse = List<T>.from(value.map((x) => model.fromJson(x)));
-      } else {
-        apiResponse = model.fromJson(value);
-      }
-
-      emit(RequestState.success(apiResponse));
+      T apiResponse = fromMap(value);
+      emit(RequestState<T>.success(apiResponse));
     }).catchError((error) {
-      emit(RequestState.failure(error.toString()));
+      emit(RequestState<T>.failure(error.toString()));
     });
   }
 

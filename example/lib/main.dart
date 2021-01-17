@@ -21,8 +21,17 @@ class App extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => RequestCubit<PostModel>(model: PostModel()),
+          create: (context) => RequestCubit<PostModel>(
+            (json) => PostModel.fromJson(json),
+          ),
         ),
+        // for list of posts simply update type and fromMap method
+        // BlocProvider(
+        //   create: (context) => RequestCubit<List<PostModel>>(
+        //     (json) =>
+        //         List<PostModel>.from(json.map((x) => PostModel.fromJson(x))),
+        //   ),
+        // ),
       ],
       child: AppView(),
     );
@@ -58,12 +67,12 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.read<RequestCubit<PostModel>>().getRequest(
-                handle: "posts",
+                handle: "posts/1",
               );
         },
         child: Icon(Icons.add),
       ),
-      body: BlocBuilder<RequestCubit<PostModel>, RequestState>(
+      body: BlocBuilder<RequestCubit<PostModel>, RequestState<PostModel>>(
         builder: (context, state) {
           switch (state.status) {
             case RequestStatus.empty:

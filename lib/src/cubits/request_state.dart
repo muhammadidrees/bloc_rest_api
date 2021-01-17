@@ -22,7 +22,7 @@ RequestStatus enumFromString(String input) {
 }
 
 @immutable
-class RequestState extends Equatable {
+class RequestState<T> extends Equatable {
   const RequestState._({
     this.status = RequestStatus.empty,
     this.model,
@@ -43,11 +43,11 @@ class RequestState extends Equatable {
         );
 
   final RequestStatus status;
-  final dynamic model;
+  final T model;
   final String errorMessage;
 
   @override
-  List<Object> get props => [status];
+  List<Object> get props => [status, model];
 
   @override
   String toString() => status.toString();
