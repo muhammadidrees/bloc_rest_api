@@ -7,8 +7,7 @@ import 'package:bloc_rest_api/src/models/models.dart';
 import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
-/// General Repository to interact with the API format
-/// as provided by Mazhar Bhai
+/// General Repository to interact with any REST API
 class GereralResponseRepository {
   /// Used to initiate a [GET] request
   ///
@@ -25,8 +24,10 @@ class GereralResponseRepository {
   }) async {
     // check if url is provided
     assert(
-        ["", null].contains(baseUrl) || ["", null].contains(ApiConfig.baseUrl),
-        "Both baseUrl and ApiConfig cannot be set as null");
+        !(["", null].contains(baseUrl) &&
+            ["", null].contains(ApiConfig.baseUrl)),
+        "Both baseUrl and ApiConfig cannot be set as null at the same time");
+
     var responseJson;
     try {
       final response = await http
@@ -62,8 +63,9 @@ class GereralResponseRepository {
   }) async {
     // check if url is provided
     assert(
-        ["", null].contains(baseUrl) || ["", null].contains(ApiConfig.baseUrl),
-        "Both baseUrl and ApiConfig cannot be set as null");
+        !(["", null].contains(baseUrl) &&
+            ["", null].contains(ApiConfig.baseUrl)),
+        "Both baseUrl and ApiConfig cannot be set as null at the same time");
 
     var responseJson;
     try {
