@@ -17,7 +17,8 @@ class GereralResponseRepository {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<dynamic> get({
+  Future<dynamic> get(
+    http.Client client, {
     @required String handle,
     String baseUrl,
     Map<String, String> header,
@@ -30,7 +31,7 @@ class GereralResponseRepository {
 
     var responseJson;
     try {
-      final response = await http
+      final response = await client
           .get(
             (baseUrl ?? ApiConfig.baseUrl) + handle,
             headers: header ?? ApiConfig.header,
@@ -55,7 +56,8 @@ class GereralResponseRepository {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<dynamic> post({
+  Future<dynamic> post(
+    http.Client client, {
     @required String handle,
     String body,
     String baseUrl,
@@ -69,7 +71,7 @@ class GereralResponseRepository {
 
     var responseJson;
     try {
-      final response = await http
+      final response = await client
           .post((baseUrl ?? ApiConfig.baseUrl) + handle,
               body: body, headers: header ?? ApiConfig.header)
           .timeout(ApiConfig.responseTimeOut);

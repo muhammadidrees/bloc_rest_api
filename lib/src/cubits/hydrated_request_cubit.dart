@@ -2,11 +2,14 @@ part of 'cubits.dart';
 
 class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState>
     with HydratedMixin {
-  HydratedRequestCubit({@required this.model}) : super(RequestState.empty()) {
+  HydratedRequestCubit({@required this.model, http.Client httpClient})
+      : this.httpClient = httpClient ?? http.Client(),
+        super(RequestState.empty()) {
     hydrate();
   }
 
   final T model;
+  final http.Client httpClient;
 
   void emitCurrentState() {
     emit(state);
@@ -27,7 +30,12 @@ class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState>
   }) async {
     emit(RequestState.loading());
     await GereralResponseRepository()
-        .get(handle: handle, baseUrl: baseUrl, header: header)
+        .get(
+      httpClient,
+      handle: handle,
+      baseUrl: baseUrl,
+      header: header,
+    )
         .then((value) {
       var apiResponse = model.fromJson(value);
 
@@ -45,7 +53,13 @@ class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState>
   }) async {
     emit(RequestState.loading());
     GereralResponseRepository()
-        .post(handle: handle, baseUrl: baseUrl, header: header, body: body)
+        .post(
+      httpClient,
+      handle: handle,
+      baseUrl: baseUrl,
+      header: header,
+      body: body,
+    )
         .then((value) {
       var apiResponse = model.fromJson(value);
 
@@ -68,4 +82,10 @@ class HydratedRequestCubit<T extends ResultModel> extends Cubit<RequestState>
         "status": state?.status?.toString() ?? RequestState.empty(),
         "model": state?.model?.toJson() ?? null,
       };
+
+  @override
+  Future<void> close() {
+    httpClient.close();
+    return super.close();
+  }
 }

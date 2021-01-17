@@ -1,8 +1,14 @@
 part of 'cubits.dart';
 
 class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
-  RequestCubit({@required this.model}) : super(RequestState.empty());
+  RequestCubit({
+    @required this.model,
+    HttpClient httpClient,
+  })  : this.httpClient = httpClient ?? http.Client(),
+        super(RequestState.empty());
+
   final T model;
+  final http.Client httpClient;
 
   /// Emits current state of bloc
   void emitCurrentState() {
@@ -25,7 +31,12 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
   }) async {
     emit(RequestState.loading());
     await GereralResponseRepository()
-        .get(handle: handle, baseUrl: baseUrl, header: header)
+        .get(
+      httpClient,
+      handle: handle,
+      baseUrl: baseUrl,
+      header: header,
+    )
         .then((value) {
       var apiResponse;
       if (value is List) {
@@ -47,7 +58,13 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
   }) async {
     emit(RequestState.loading());
     await GereralResponseRepository()
-        .post(handle: handle, baseUrl: baseUrl, header: header, body: body)
+        .post(
+      httpClient,
+      handle: handle,
+      baseUrl: baseUrl,
+      header: header,
+      body: body,
+    )
         .then((value) {
       var apiResponse;
       if (value is List) {
@@ -60,5 +77,11 @@ class RequestCubit<T extends ResultModel> extends Cubit<RequestState> {
     }).catchError((error) {
       emit(RequestState.failure(error.toString()));
     });
+  }
+
+  @override
+  Future<void> close() {
+    httpClient.close();
+    return super.close();
   }
 }
