@@ -20,18 +20,19 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        // for single model
         BlocProvider(
           create: (context) => RequestCubit<PostModel>(
             (json) => PostModel.fromJson(json),
           ),
         ),
         // for list of posts simply update type and fromMap method
-        // BlocProvider(
-        //   create: (context) => RequestCubit<List<PostModel>>(
-        //     (json) =>
-        //         List<PostModel>.from(json.map((x) => PostModel.fromJson(x))),
-        //   ),
-        // ),
+        BlocProvider(
+          create: (context) => RequestCubit<List<PostModel>>(
+            (json) =>
+                List<PostModel>.from(json.map((x) => PostModel.fromJson(x))),
+          ),
+        ),
       ],
       child: AppView(),
     );
