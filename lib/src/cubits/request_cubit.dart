@@ -25,6 +25,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     emit(RequestState<T>.empty());
   }
 
+  /// Emits the success state with the given model
   void updateModel(T model) {
     emit(RequestState<T>.success(model));
   }
@@ -43,7 +44,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     Map<String, String> header,
   }) async {
     emit(RequestState<T>.loading());
-    await GereralResponseRepository()
+    await GereralRepository()
         .get(
       httpClient,
       handle: handle,
@@ -75,7 +76,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     String body,
   }) async {
     emit(RequestState<T>.loading());
-    await GereralResponseRepository()
+    await GereralRepository()
         .post(
       httpClient,
       handle: handle,

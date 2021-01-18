@@ -8,7 +8,7 @@ import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 /// General Repository to interact with any REST API
-class GereralResponseRepository {
+class GereralRepository {
   /// Used to initiate a [GET] request
   ///
   /// The [handle] is end point that will be attached to the [baseUrl]

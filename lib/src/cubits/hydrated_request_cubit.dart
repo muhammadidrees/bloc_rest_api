@@ -50,7 +50,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
     Map<String, String> header,
   }) async {
     emit(RequestState<T>.loading());
-    await GereralResponseRepository()
+    await GereralRepository()
         .get(
       httpClient,
       handle: handle,
@@ -82,7 +82,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
     String body,
   }) async {
     emit(RequestState<T>.loading());
-    GereralResponseRepository()
+    GereralRepository()
         .post(
       httpClient,
       handle: handle,

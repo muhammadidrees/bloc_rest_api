@@ -11,7 +11,7 @@ main() {
   group('getPost', () {
     test('returns a Post if the http call completes successfully', () async {
       final client = MockClient();
-      final repository = GereralResponseRepository();
+      final repository = GereralRepository();
 
       when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
           .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
@@ -27,7 +27,7 @@ main() {
 
     test('throws an exception if the http call completes with an error', () {
       final client = MockClient();
-      final repository = GereralResponseRepository();
+      final repository = GereralRepository();
 
       // Use Mockito to return an unsuccessful response when it calls the
       // provided http.Client.
@@ -47,7 +47,7 @@ main() {
   group('postPost', () {
     test('returns a Post if the http call completes successfully', () async {
       final client = MockClient();
-      final repository = GereralResponseRepository();
+      final repository = GereralRepository();
 
       when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
           .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
@@ -63,7 +63,7 @@ main() {
 
     test('throws an exception if the http call completes with an error', () {
       final client = MockClient();
-      final repository = GereralResponseRepository();
+      final repository = GereralRepository();
 
       // Use Mockito to return an unsuccessful response when it calls the
       // provided http.Client.
