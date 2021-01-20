@@ -30,6 +30,22 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     emit(RequestState<T>.success(model));
   }
 
+  /// A general function to control bloc with any given
+  /// [requestFuntion] that returns a future of type [T]
+  ///
+  /// To emit an error state you can use `throw` inside your
+  /// future function
+  void request(Future<T> requestFunction()) async {
+    emit(RequestState<T>.loading());
+
+    await requestFunction().then((value) {
+      T apiResponse = fromMap(value);
+      emit(RequestState.success(apiResponse));
+    }).catchError((error) {
+      emit(RequestState<T>.failure(error.toString()));
+    });
+  }
+
   /// Used to initiate a [GET] request
   ///
   /// The [handle] is end point that will be attached to the [baseUrl]
