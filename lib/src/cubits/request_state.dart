@@ -42,8 +42,18 @@ class RequestState<T> extends Equatable {
           errorMessage: error,
         );
 
+  /// The status of the current state
+  /// can be either [RequestStatus.empty],
+  /// [RequestStatus.loading], [RequestStatus.success]
+  /// or [RequestStatus.failure]
   final RequestStatus status;
+
+  /// This is the model of type [T] to be
+  /// preserved by the bloc state.
   final T model;
+
+  /// This contains the error message caught by
+  /// request function
   final String errorMessage;
 
   @override
