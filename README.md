@@ -1,6 +1,6 @@
 # Bloc REST API
 
-A flutter package to easily interegrate and manage REST APIs. Now all you need to do is create a model class and all the rest is taken care of. :)
+A flutter package to easily integrate and manage REST APIs. Now all you need to do is create a model class and all the rest is taken care of. :)
 
 > Before using the package fimiliarize yourself with [bloc library](https://bloclibrary.dev/#/)
 
@@ -12,7 +12,7 @@ First, we need to do add `bloc_rest_api` to the dependencies of the `pubspec.yam
 
 ```yaml
 dependencies:
-  bloc_rest_api: ^0.1.0
+  bloc_rest_api: <latest version>
 ```
 
 Next, we need to install it:
@@ -94,6 +94,27 @@ context.read<RequestCubit<PostModel>>().getRequest(
       baseUrl: "https://jsonplaceholder.typicode.com/",
       handle: "posts/1",
     );
+```
+
+
+In case you are dealing with complex data and want to handle the mapping yourself you can you the request method that takes a function that returns Future of type T as parameter.
+
+```dart
+Future<PostModel> fetchAlbum() async {
+  final response =
+      await http.get('https://jsonplaceholder.typicode.com/posts/1');
+
+  if (response.statusCode == 200) {
+    return PostModel.fromJson(jsonDecode(response.body));
+  } else {
+    // Any exception thrown will emit failure state
+    throw Exception('Failed to load album');
+  }
+}
+
+...
+    context.read<RequestCubit<PostModel>>().request(fetchAlbum());
+...
 ```
 
 Finally react on the states by using either `BlocBuilder`, `BlocListner` or `BlocConsumer` method.
