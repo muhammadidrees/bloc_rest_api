@@ -17,7 +17,7 @@ class GereralRepository {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<dynamic> get(
+  Future<Map<String, dynamic>> get(
     http.Client client, {
     @required String handle,
     String baseUrl,
@@ -56,7 +56,7 @@ class GereralRepository {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<dynamic> post(
+  Future<Map<String, dynamic>> post(
     http.Client client, {
     @required String handle,
     String body,

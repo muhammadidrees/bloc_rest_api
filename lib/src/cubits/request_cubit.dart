@@ -1,11 +1,10 @@
 part of 'cubits.dart';
 
 class RequestCubit<T> extends Cubit<RequestState<T>> {
-  RequestCubit(
-    this.fromMap, {
+  RequestCubit({
+    this.fromMap,
     HttpClient httpClient,
   })  : this.httpClient = httpClient ?? http.Client(),
-        assert(fromMap != null, "FromMap function cannot be null"),
         super(RequestState<T>.empty());
 
   /// for testing
@@ -35,12 +34,11 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   ///
   /// To emit an error state you can use `throw` inside your
   /// future function
-  void request(Future<T> requestFunction()) async {
+  void request(Future<T> requestFunction) async {
     emit(RequestState<T>.loading());
 
-    await requestFunction().then((value) {
-      T apiResponse = fromMap(value);
-      emit(RequestState.success(apiResponse));
+    await requestFunction.then((value) {
+      emit(RequestState.success(value));
     }).catchError((error) {
       emit(RequestState<T>.failure(error.toString()));
     });
@@ -54,25 +52,31 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  void getRequest({
+  ///
+  /// The [fromMap] function is used the convert the response json to
+  /// model [T] this can either be provided during bloc initialization
+  /// in the provider or can be specified in this function. In case
+  /// it is given in both places the function one is given presidence.
+  Future<void> getRequest({
     @required String handle,
     String baseUrl,
     Map<String, String> header,
+    T Function(dynamic json) fromMap,
   }) async {
-    emit(RequestState<T>.loading());
-    await GereralRepository()
-        .get(
-      httpClient,
-      handle: handle,
-      baseUrl: baseUrl,
-      header: header,
-    )
-        .then((value) {
-      T apiResponse = fromMap(value);
-      emit(RequestState<T>.success(apiResponse));
-    }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
-    });
+    assert((fromMap != null || this.fromMap != null),
+        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+    request(
+      GereralRepository()
+          .get(
+            httpClient,
+            handle: handle,
+            baseUrl: baseUrl,
+            header: header,
+          )
+          .then(
+            (value) => fromMap?.call(value) ?? this.fromMap.call(value),
+          ),
+    );
   }
 
   /// Used to initiate a [POST] request
@@ -85,27 +89,33 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
+  ///
+  /// The [fromMap] function is used the convert the response json to
+  /// model [T] this can either be provided during bloc initialization
+  /// in the provider or can be specified in this function. In case
+  /// it is given in both places the function one is given presidence.
   void postRequest({
     @required String handle,
     String baseUrl,
     Map<String, String> header,
     String body,
+    T Function(dynamic json) fromMap,
   }) async {
-    emit(RequestState<T>.loading());
-    await GereralRepository()
-        .post(
-      httpClient,
-      handle: handle,
-      baseUrl: baseUrl,
-      header: header,
-      body: body,
-    )
-        .then((value) {
-      T apiResponse = fromMap(value);
-      emit(RequestState<T>.success(apiResponse));
-    }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
-    });
+    assert((fromMap != null || this.fromMap != null),
+        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+    request(
+      GereralRepository()
+          .post(
+            httpClient,
+            handle: handle,
+            baseUrl: baseUrl,
+            header: header,
+            body: body,
+          )
+          .then(
+            (value) => fromMap?.call(value) ?? this.fromMap.call(value),
+          ),
+    );
   }
 
   @override

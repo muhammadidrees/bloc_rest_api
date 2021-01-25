@@ -23,7 +23,7 @@ class App extends StatelessWidget {
         // for single model
         BlocProvider(
           create: (context) => RequestCubit<PostModel>(
-            (json) => PostModel.fromJson(json),
+            fromMap: (json) => PostModel.fromJson(json),
           ),
         ),
         BlocProvider(
@@ -35,7 +35,7 @@ class App extends StatelessWidget {
         // for list of posts simply update type and fromMap method
         BlocProvider(
           create: (context) => RequestCubit<List<PostModel>>(
-            (json) =>
+            fromMap: (json) =>
                 List<PostModel>.from(json.map((x) => PostModel.fromJson(x))),
           ),
         ),
