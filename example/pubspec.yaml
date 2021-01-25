@@ -16,6 +16,7 @@ dependencies:
   equatable: ^1.2.5
   flutter_bloc: ^6.1.1
   hydrated_bloc: ^6.1.0
+  http: ^0.12.2
 
 dev_dependencies:
   flutter_test:

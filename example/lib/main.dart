@@ -1,7 +1,9 @@
+import 'dart:convert';
+
 import 'package:bloc_rest_api/bloc_rest_api.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:http/http.dart' as http;
 import 'models/models.dart';
 
 void main() {
@@ -23,8 +25,8 @@ class App extends StatelessWidget {
         // for single model
         BlocProvider(
           create: (context) => RequestCubit<PostModel>(
-            fromMap: (json) => PostModel.fromJson(json),
-          ),
+              // fromMap: (json) => PostModel.fromJson(json),
+              ),
         ),
         BlocProvider(
           create: (context) => HydratedRequestCubit<PostModel>(
@@ -73,9 +75,7 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.read<RequestCubit<PostModel>>().getRequest(
-                handle: "posts/1",
-              );
+          context.read<RequestCubit<PostModel>>().request(fetchAlbum());
         },
         child: Icon(Icons.add),
       ),
@@ -104,5 +104,17 @@ class HomePage extends StatelessWidget {
         },
       ),
     );
+  }
+}
+
+Future<PostModel> fetchAlbum() async {
+  final response =
+      await http.get('https://jsonplaceholder.typicode.com/posts/1');
+
+  if (response.statusCode == 200) {
+    return PostModel.fromJson(jsonDecode(response.body));
+  } else {
+    // Any exception thrown will emit failure state
+    throw Exception('Failed to load album');
   }
 }
