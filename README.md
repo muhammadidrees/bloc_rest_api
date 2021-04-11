@@ -119,12 +119,14 @@ Future<PostModel> fetchAlbum() async {
 
 Finally react on the states by using either `BlocBuilder`, `BlocListner` or `BlocConsumer` method.
 
-States can be one of four and can be distinguished by state.status:
+States can have one of 4 status distinguished as state.status:
      
-1. RequestState.empty: Initial State
-2. RequestState.loading: Loading State
-3. RequestState.success: Success State
-4. RequestState.error: Error State
+1. RequestStatus.empty: Initial State
+2. RequestStatus.loading: Loading State
+3. RequestStatus.success: Success State
+4. RequestStatus.error: Error State
+ 
+__Node:__ The state retains the data on status change and is only changed either on the success state or by explicitly calling the emptyCubit method. This features allows you to show previous data even on API error.
 
 Heres is an example builder method for PostModel:
 
