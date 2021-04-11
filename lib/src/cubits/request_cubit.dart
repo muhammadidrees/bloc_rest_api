@@ -26,7 +26,12 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
 
   /// Emits the success state with the given model
   void updateModel(T model) {
-    emit(RequestState<T>.success(model));
+    emit(
+      state.copyWith(
+        status: RequestStatus.success,
+        model: model,
+      ),
+    );
   }
 
   /// A general function to control bloc with any given
@@ -35,12 +40,23 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// To emit an error state you can use `throw` inside your
   /// future function
   void request(Future<T> requestFunction) async {
-    emit(RequestState<T>.loading());
-
+    emit(
+      state.copyWith(status: RequestStatus.loading),
+    );
     await requestFunction.then((value) {
-      emit(RequestState.success(value));
+      emit(
+        state.copyWith(
+          status: RequestStatus.success,
+          model: value,
+        ),
+      );
     }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
+      emit(
+        state.copyWith(
+          status: RequestStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
     });
   }
 

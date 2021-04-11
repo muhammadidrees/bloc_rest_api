@@ -24,16 +24,50 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
   /// for testing
   final http.Client httpClient;
 
+  /// emits the current state of cubit
   void emitCurrentState() {
     emit(state);
   }
 
+  /// emptys the cubit
   void emptyCubit() {
     emit(RequestState<T>.empty());
   }
 
+  /// Emits the success state with the given model
   void updateModel(T model) {
-    emit(RequestState<T>.success(model));
+    emit(
+      state.copyWith(
+        status: RequestStatus.success,
+        model: model,
+      ),
+    );
+  }
+
+  /// A general function to control bloc with any given
+  /// [requestFuntion] that returns a future of type [T]
+  ///
+  /// To emit an error state you can use `throw` inside your
+  /// future function
+  void request(Future<T> requestFunction) async {
+    emit(
+      state.copyWith(status: RequestStatus.loading),
+    );
+    await requestFunction.then((value) {
+      emit(
+        state.copyWith(
+          status: RequestStatus.success,
+          model: value,
+        ),
+      );
+    }).catchError((error) {
+      emit(
+        state.copyWith(
+          status: RequestStatus.failure,
+          errorMessage: error.toString(),
+        ),
+      );
+    });
   }
 
   /// Used to initiate a [GET] request
@@ -44,25 +78,26 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  void getRequest({
+  Future<void> getRequest({
     @required String handle,
     String baseUrl,
     Map<String, String> header,
+    T Function(dynamic json) fromMap,
   }) async {
-    emit(RequestState<T>.loading());
-    await GereralRepository()
-        .get(
-      httpClient,
-      handle: handle,
-      baseUrl: baseUrl,
-      header: header,
-    )
-        .then((value) {
-      T apiResponse = fromMap(value);
-      emit(RequestState<T>.success(apiResponse));
-    }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
-    });
+    assert((fromMap != null || this.fromMap != null),
+        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+    request(
+      GereralRepository()
+          .get(
+            httpClient,
+            handle: handle,
+            baseUrl: baseUrl,
+            header: header,
+          )
+          .then(
+            (value) => fromMap?.call(value) ?? this.fromMap.call(value),
+          ),
+    );
   }
 
   /// Used to initiate a [POST] request
@@ -80,22 +115,23 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
     String baseUrl,
     Map<String, String> header,
     String body,
+    T Function(dynamic json) fromMap,
   }) async {
-    emit(RequestState<T>.loading());
-    GereralRepository()
-        .post(
-      httpClient,
-      handle: handle,
-      baseUrl: baseUrl,
-      header: header,
-      body: body,
-    )
-        .then((value) {
-      T apiResponse = fromMap(value);
-      emit(RequestState<T>.success(apiResponse));
-    }).catchError((error) {
-      emit(RequestState<T>.failure(error.toString()));
-    });
+    assert((fromMap != null || this.fromMap != null),
+        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+    request(
+      GereralRepository()
+          .post(
+            httpClient,
+            handle: handle,
+            baseUrl: baseUrl,
+            header: header,
+            body: body,
+          )
+          .then(
+            (value) => fromMap?.call(value) ?? this.fromMap.call(value),
+          ),
+    );
   }
 
   @override

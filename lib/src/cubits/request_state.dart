@@ -23,6 +23,12 @@ RequestStatus enumFromString(String input) {
 
 @immutable
 class RequestState<T> extends Equatable {
+  const RequestState({
+    this.status = RequestStatus.empty,
+    this.model,
+    this.errorMessage,
+  });
+
   const RequestState._({
     this.status = RequestStatus.empty,
     this.model,
@@ -31,16 +37,18 @@ class RequestState<T> extends Equatable {
 
   const RequestState.empty() : this._();
 
-  const RequestState.loading() : this._(status: RequestStatus.loading);
-
-  const RequestState.success(dynamic result)
-      : this._(status: RequestStatus.success, model: result);
-
-  const RequestState.failure(String error)
-      : this._(
-          status: RequestStatus.failure,
-          errorMessage: error,
-        );
+  /// This methods helps in persisting the data i.e. [model]
+  /// that has once entered the bloc state.
+  RequestState<T> copyWith({
+    RequestStatus status,
+    T model,
+    String errorMessage,
+  }) =>
+      RequestState<T>(
+        status: status ?? status,
+        model: model ?? model,
+        errorMessage: errorMessage ?? errorMessage,
+      );
 
   /// The status of the current state
   /// can be either [RequestStatus.empty],
