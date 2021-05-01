@@ -1,3 +1,7 @@
+# 0.3.1
+
+- docs: spell corrections
+- dev: added pedantic as linter for package
 # 0.3.0
 
 - feat: use of copy with to retain model data on state change
