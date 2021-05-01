@@ -6,9 +6,9 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
     @required this.fromMap,
     @required this.toMap,
     http.Client httpClient,
-  })  : this.httpClient = httpClient ?? http.Client(),
-        assert(fromMap != null, "FromMap function cannot be null"),
-        assert(toMap != null, "toMap function cannot be null"),
+  })  : httpClient = httpClient ?? http.Client(),
+        assert(fromMap != null, 'FromMap function cannot be null'),
+        assert(toMap != null, 'toMap function cannot be null'),
         super(RequestState<T>.empty()) {
     hydrate();
   }
@@ -85,7 +85,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
     T Function(dynamic json) fromMap,
   }) async {
     assert((fromMap != null || this.fromMap != null),
-        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+        'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
     request(
       GereralRepository()
           .get(
@@ -118,7 +118,7 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
     T Function(dynamic json) fromMap,
   }) async {
     assert((fromMap != null || this.fromMap != null),
-        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+        'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
     request(
       GereralRepository()
           .post(
@@ -136,16 +136,16 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
 
   @override
   RequestState<T> fromJson(Map<String, dynamic> json) => RequestState<T>._(
-        status: json["status"] == null
+        status: json['status'] == null
             ? null
-            : enumFromString(json["status"].toString()),
-        model: json["model"] == null ? null : fromMap(json["model"]),
+            : enumFromString(json['status'].toString()),
+        model: json['model'] == null ? null : fromMap(json['model']),
       );
 
   @override
   Map<String, dynamic> toJson(RequestState<T> state) => {
-        "status": state?.status?.toString() ?? RequestState<T>.empty(),
-        "model": state?.model == null ? null : toMap(state.model),
+        'status': state?.status?.toString() ?? RequestState<T>.empty(),
+        'model': state?.model == null ? null : toMap(state.model),
       };
 
   @override

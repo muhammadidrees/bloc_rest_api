@@ -6,7 +6,7 @@
 /// and [postRequest()]
 class ApiConfig {
   /// base url for the project
-  static String baseUrl = "";
+  static String baseUrl = '';
 
   /// header for the project
   static Map<String, String> header;

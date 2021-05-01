@@ -4,7 +4,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   RequestCubit({
     this.fromMap,
     HttpClient httpClient,
-  })  : this.httpClient = httpClient ?? http.Client(),
+  })  : httpClient = httpClient ?? http.Client(),
         super(RequestState<T>.empty());
 
   /// for testing
@@ -80,7 +80,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     T Function(dynamic json) fromMap,
   }) async {
     assert((fromMap != null || this.fromMap != null),
-        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+        'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
     request(
       GereralRepository()
           .get(
@@ -118,7 +118,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     T Function(dynamic json) fromMap,
   }) async {
     assert((fromMap != null || this.fromMap != null),
-        "fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc");
+        'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
     request(
       GereralRepository()
           .post(

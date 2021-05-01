@@ -4,16 +4,16 @@ enum RequestStatus { empty, loading, success, failure }
 
 RequestStatus enumFromString(String input) {
   switch (input) {
-    case "RequestStatus.empty":
+    case 'RequestStatus.empty':
       return RequestStatus.empty;
 
-    case "RequestStatus.loading":
+    case 'RequestStatus.loading':
       return RequestStatus.loading;
 
-    case "RequestStatus.success":
+    case 'RequestStatus.success':
       return RequestStatus.success;
 
-    case "RequestStatus.failure":
+    case 'RequestStatus.failure':
       return RequestStatus.failure;
 
     default:

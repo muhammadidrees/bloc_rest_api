@@ -7,7 +7,7 @@ import 'package:http/http.dart' as http;
 // Create new instances of this class in each test.
 class MockClient extends Mock implements http.Client {}
 
-main() {
+void main() {
   group('getPost', () {
     test('returns a Post if the http call completes successfully', () async {
       final client = MockClient();

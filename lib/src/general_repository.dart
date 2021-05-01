@@ -25,9 +25,9 @@ class GereralRepository {
   }) async {
     // check if url is provided
     assert(
-        !(["", null].contains(baseUrl) &&
-            ["", null].contains(ApiConfig.baseUrl)),
-        "Both baseUrl and ApiConfig cannot be set as null at the same time");
+        !(['', null].contains(baseUrl) &&
+            ['', null].contains(ApiConfig.baseUrl)),
+        'Both baseUrl and ApiConfig cannot be set as null at the same time');
 
     var responseJson;
     try {
@@ -65,9 +65,9 @@ class GereralRepository {
   }) async {
     // check if url is provided
     assert(
-        !(["", null].contains(baseUrl) &&
-            ["", null].contains(ApiConfig.baseUrl)),
-        "Both baseUrl and ApiConfig cannot be set as null at the same time");
+        !(['', null].contains(baseUrl) &&
+            ['', null].contains(ApiConfig.baseUrl)),
+        'Both baseUrl and ApiConfig cannot be set as null at the same time');
 
     var responseJson;
     try {
@@ -99,7 +99,7 @@ class GereralRepository {
       case 500:
       default:
         throw FetchDataException(
-            "Something went wrong, please try again later.\n\nStatus Code : ${response.statusCode}");
+            'Something went wrong, please try again later.\n\nStatus Code : ${response.statusCode}');
     }
   }
 }

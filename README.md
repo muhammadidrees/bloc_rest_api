@@ -46,17 +46,17 @@ class PostModel extends Equatable {
   final String body;
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-        userId: json["userId"] == null ? null : json["userId"],
-        id: json["id"] == null ? null : json["id"],
-        title: json["title"] == null ? null : json["title"],
-        body: json["body"] == null ? null : json["body"],
+        userId: json['userId'] == null ? null : json['userId'],
+        id: json['id'] == null ? null : json['id'],
+        title: json['title'] == null ? null : json['title'],
+        body: json['body'] == null ? null : json['body'],
       );
 
   Map<String, dynamic> toJson() => {
-        "userId": userId == null ? null : userId,
-        "id": id == null ? null : id,
-        "title": title == null ? null : title,
-        "body": body == null ? null : body,
+        'userId': userId == null ? null : userId,
+        'id': id == null ? null : id,
+        'title': title == null ? null : title,
+        'body': body == null ? null : body,
       };
 
   @override
@@ -91,8 +91,8 @@ To use the `getRequest` or `postRequest` methods simply use the `context.read()`
 
 ```dart
 context.read<RequestCubit<PostModel>>().getRequest(
-      baseUrl: "https://jsonplaceholder.typicode.com/",
-      handle: "posts/1",
+      baseUrl: 'https://jsonplaceholder.typicode.com/',
+      handle: 'posts/1',
     );
 ```
 
@@ -126,7 +126,7 @@ States can have one of 4 status distinguished as state.status:
 3. RequestStatus.success: Success State
 4. RequestStatus.error: Error State
  
-__Node:__ The state retains the data on status change and is only changed either on the success state or by explicitly calling the emptyCubit method. This features allows you to show previous data even on API error.
+__Note:__ The state retains the data on status change and is only changed either on the success state or by explicitly calling the emptyCubit method. This features allows you to show previous data even on API error.
 
 Heres is an example builder method for PostModel:
 
@@ -135,7 +135,7 @@ BlocBuilder<RequestCubit<PostModel>, RequestState<PostModel>>(
   builder: (context, state) {
     switch (state.status) {
       case RequestStatus.empty:
-        return Center(child: Text("Press the button to get some data"));
+        return Center(child: Text('Press the button to get some data'));
 
       case RequestStatus.loading:
         return Center(child: CircularProgressIndicator());
@@ -162,8 +162,8 @@ BlocBuilder<RequestCubit<PostModel>, RequestState<PostModel>>(
 `baseUrl`, `header` and `responseTimeOut` can also be configured globally for all `RequestCubit` instances via `ApiConfig`
 
 ```dart
-ApiConfig.baseUrl = "...";
-ApiConfig.header = {"...": ""};
+ApiConfig.baseUrl = '...';
+ApiConfig.header = {'...': ''};
 ApiConfig.responseTimeOut = Duration(...);
 ```
 
