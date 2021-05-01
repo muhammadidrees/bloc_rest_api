@@ -7,32 +7,33 @@ class CustomException implements Exception {
 
   CustomException([this._message, this._prefix]);
 
+  @override
   String toString() {
-    return "$_prefix$_message";
+    return '$_prefix$_message';
   }
 }
 
 class FetchDataException extends CustomException {
   FetchDataException(
-      [String message = "Please check your internet and try again later."])
-      : super(message, "");
+      [String message = 'Please check your internet and try again later.'])
+      : super(message, '');
 }
 
 class BadRequestException extends CustomException {
-  BadRequestException([String message]) : super(message, "Invalid Request: ");
+  BadRequestException([String message]) : super(message, 'Invalid Request: ');
 }
 
 class UnauthorisedException extends CustomException {
-  UnauthorisedException([String message]) : super(message, "Unauthorised: ");
+  UnauthorisedException([String message]) : super(message, 'Unauthorised: ');
 }
 
 class InvalidInputException extends CustomException {
-  InvalidInputException([String message]) : super(message, "Invalid Input: ");
+  InvalidInputException([String message]) : super(message, 'Invalid Input: ');
 }
 
 class TimeOutExceptionC extends CustomException {
   TimeOutExceptionC(
       [String message =
-          "Something went wrong, please check your internet and try again later."])
-      : super(message, "");
+          'Something went wrong, please check your internet and try again later.'])
+      : super(message, '');
 }

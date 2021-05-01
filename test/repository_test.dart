@@ -14,13 +14,13 @@ void main() {
       final repository = GereralRepository();
 
       when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
-          .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
+          .thenAnswer((_) async => http.Response("{'title': 'Test'}", 200));
 
       expect(
           await repository.get(
             client,
-            handle: "posts/1",
-            baseUrl: "https://jsonplaceholder.typicode.com/",
+            handle: 'posts/1',
+            baseUrl: 'https://jsonplaceholder.typicode.com/',
           ),
           isA<dynamic>());
     });
@@ -37,8 +37,8 @@ void main() {
       expect(
           repository.get(
             client,
-            handle: "posts/1",
-            baseUrl: "https://jsonplaceholder.typicode.com/",
+            handle: 'posts/1',
+            baseUrl: 'https://jsonplaceholder.typicode.com/',
           ),
           throwsException);
     });
@@ -50,13 +50,13 @@ void main() {
       final repository = GereralRepository();
 
       when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
-          .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
+          .thenAnswer((_) async => http.Response("{'title': 'Test'}", 200));
 
       expect(
           await repository.post(
             client,
-            handle: "posts/1",
-            baseUrl: "https://jsonplaceholder.typicode.com/",
+            handle: 'posts/1',
+            baseUrl: 'https://jsonplaceholder.typicode.com/',
           ),
           isA<dynamic>());
     });
@@ -73,8 +73,8 @@ void main() {
       expect(
           repository.post(
             client,
-            handle: "posts/1",
-            baseUrl: "https://jsonplaceholder.typicode.com/",
+            handle: 'posts/1',
+            baseUrl: 'https://jsonplaceholder.typicode.com/',
           ),
           throwsException);
     });
