@@ -14,7 +14,7 @@ void main() {
       final repository = GereralRepository();
 
       when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
-          .thenAnswer((_) async => http.Response("{'title': 'Test'}", 200));
+          .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
 
       expect(
           await repository.get(
@@ -50,7 +50,7 @@ void main() {
       final repository = GereralRepository();
 
       when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
-          .thenAnswer((_) async => http.Response("{'title': 'Test'}", 200));
+          .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
 
       expect(
           await repository.post(
