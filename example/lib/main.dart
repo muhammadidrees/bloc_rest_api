@@ -25,8 +25,8 @@ class App extends StatelessWidget {
         // for single model
         BlocProvider(
           create: (context) => RequestCubit<PostModel>(
-              // fromMap: (json) => PostModel.fromJson(json),
-              ),
+            fromMap: (json) => PostModel.fromJson(json),
+          ),
         ),
         BlocProvider(
           create: (context) => HydratedRequestCubit<PostModel>(
@@ -75,11 +75,21 @@ class HomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.read<RequestCubit<PostModel>>().request(fetchAlbum());
+          // context.read<RequestCubit<PostModel>>().request(fetchAlbum());
+          context.read<RequestCubit<PostModel>>().getRequest(
+                handle: 'posts/1',
+              );
         },
         child: Icon(Icons.add),
       ),
-      body: BlocBuilder<RequestCubit<PostModel>, RequestState<PostModel>>(
+      body: BlocConsumer<RequestCubit<PostModel>, RequestState<PostModel>>(
+        listener: (context, state) {
+          if (state.status == RequestStatus.failure) {
+            Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorMessage)),
+            );
+          }
+        },
         builder: (context, state) {
           switch (state.status) {
             case RequestStatus.empty:
@@ -89,6 +99,7 @@ class HomePage extends StatelessWidget {
               return Center(child: CircularProgressIndicator());
 
             case RequestStatus.success:
+            case RequestStatus.failure:
               return Center(
                 child: Padding(
                   padding: const EdgeInsets.all(32.0),
@@ -96,8 +107,6 @@ class HomePage extends StatelessWidget {
                 ),
               );
 
-            case RequestStatus.failure:
-              return Center(child: Text(state.errorMessage));
             default:
               return Container();
           }

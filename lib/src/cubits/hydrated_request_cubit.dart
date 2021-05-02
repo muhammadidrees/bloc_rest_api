@@ -78,12 +78,20 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<void> getRequest({
-    @required String handle,
-    String baseUrl,
-    Map<String, String> header,
-    T Function(dynamic json) fromMap,
-  }) async {
+  ///
+  /// The [fromMap] function is used the convert the response json to
+  /// model [T] this can either be provided during bloc initialization
+  /// in the provider or can be specified in this function. In case
+  /// it is given in both places the function one is given presidence.
+  ///
+  /// Use the [enableLog] flag to show logs for the request in debug
+  /// console
+  Future<void> getRequest(
+      {@required String handle,
+      String baseUrl,
+      Map<String, String> header,
+      T Function(dynamic json) fromMap,
+      bool enableLogs}) async {
     assert((fromMap != null || this.fromMap != null),
         'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
     request(
@@ -93,9 +101,10 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
             handle: handle,
             baseUrl: baseUrl,
             header: header,
+            enableLogs: enableLogs,
           )
           .then(
-            (value) => fromMap?.call(value) ?? this.fromMap.call(value),
+            (value) => toModel(fromMap, value),
           ),
     );
   }
@@ -110,12 +119,21 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
+  ///
+  /// The [fromMap] function is used the convert the response json to
+  /// model [T] this can either be provided during bloc initialization
+  /// in the provider or can be specified in this function. In case
+  /// it is given in both places the function one is given presidence.
+  ///
+  /// Use the [enableLog] flag to show logs for the request in debug
+  /// console
   void postRequest({
     @required String handle,
     String baseUrl,
     Map<String, String> header,
     String body,
     T Function(dynamic json) fromMap,
+    bool enableLogs,
   }) async {
     assert((fromMap != null || this.fromMap != null),
         'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
@@ -127,11 +145,26 @@ class HydratedRequestCubit<T> extends Cubit<RequestState<T>>
             baseUrl: baseUrl,
             header: header,
             body: body,
+            enableLogs: enableLogs,
           )
           .then(
-            (value) => fromMap?.call(value) ?? this.fromMap.call(value),
+            (value) => toModel(fromMap, value),
           ),
     );
+  }
+
+  /// This function converts th given [json] to model [T] using the
+  /// funtion [fromMap] and returns the model
+  ///
+  /// In case of conversation failure it throws [FormatException]
+  T toModel(T Function(dynamic json) fromMap, Map<String, dynamic> json) {
+    T result;
+    try {
+      result = fromMap?.call(json) ?? this.fromMap.call(json);
+    } catch (e) {
+      throw FormatException(e.toString(), result);
+    }
+    return result;
   }
 
   @override

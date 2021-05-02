@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:developer' as developer;
 
 import 'package:bloc_rest_api/src/api_config.dart';
 import 'package:bloc_rest_api/src/models/models.dart';
@@ -22,6 +23,7 @@ class GereralRepository {
     @required String handle,
     String baseUrl,
     Map<String, String> header,
+    bool enableLogs = false,
   }) async {
     // check if url is provided
     assert(
@@ -29,19 +31,42 @@ class GereralRepository {
             ['', null].contains(ApiConfig.baseUrl)),
         'Both baseUrl and ApiConfig cannot be set as null at the same time');
 
+    if (enableLogs) {
+      developer.log(
+        'Request URl: ${(baseUrl ?? ApiConfig.baseUrl) + handle}',
+        name: 'package.bloc_rest_api.$handle',
+      );
+      developer.log(
+        'Request Header: ${jsonEncode(header ?? ApiConfig.header)}}',
+        name: 'package.bloc_rest_api.$handle',
+      );
+    }
+
+    var rawResponse;
     var responseJson;
     try {
-      final response = await client
+      rawResponse = await client
           .get(
             (baseUrl ?? ApiConfig.baseUrl) + handle,
             headers: header ?? ApiConfig.header,
           )
           ?.timeout(ApiConfig.responseTimeOut);
-      responseJson = _response(response);
+      responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
     } on TimeoutException {
       throw TimeOutExceptionC();
+    } finally {
+      if (enableLogs) {
+        developer.log(
+          'Request Response Status: ${rawResponse.statusCode}',
+          name: 'package.bloc_rest_api.$handle',
+        );
+        developer.log(
+          'Request Raw Response: ${rawResponse.body}',
+          name: 'package.bloc_rest_api.$handle',
+        );
+      }
     }
     return responseJson;
   }
@@ -62,6 +87,7 @@ class GereralRepository {
     String body,
     String baseUrl,
     Map<String, String> header,
+    bool enableLogs = false,
   }) async {
     // check if url is provided
     assert(
@@ -69,17 +95,43 @@ class GereralRepository {
             ['', null].contains(ApiConfig.baseUrl)),
         'Both baseUrl and ApiConfig cannot be set as null at the same time');
 
+    if (enableLogs) {
+      developer.log(
+        'Request URl: ${(baseUrl ?? ApiConfig.baseUrl) + handle}',
+        name: 'package.bloc_rest_api.$handle',
+      );
+      developer.log(
+        'Request Header: ${jsonEncode(header ?? ApiConfig.header)}}',
+        name: 'package.bloc_rest_api.$handle',
+      );
+      developer.log(
+        'Request Body: ${jsonEncode(body)}}',
+        name: 'package.bloc_rest_api.$handle',
+      );
+    }
+    var rawResponse;
     var responseJson;
     try {
-      final response = await client
+      rawResponse = await client
           .post((baseUrl ?? ApiConfig.baseUrl) + handle,
               body: body, headers: header ?? ApiConfig.header)
           .timeout(ApiConfig.responseTimeOut);
-      responseJson = _response(response);
+      responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
     } on TimeoutException {
       throw TimeOutExceptionC();
+    } finally {
+      if (enableLogs) {
+        developer.log(
+          'Request Response Status: ${rawResponse.statusCode}',
+          name: 'package.bloc_rest_api.$handle',
+        );
+        developer.log(
+          'Request Raw Response: $responseJson',
+          name: 'package.bloc_rest_api.$handle',
+        );
+      }
     }
     return responseJson;
   }
