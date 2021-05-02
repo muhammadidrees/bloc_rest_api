@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:developer' as developer;
 
 import 'package:bloc_rest_api/src/general_repository.dart';
 import 'package:equatable/equatable.dart';
