@@ -1,7 +1,13 @@
+# 0.3.2
+
+- feat: added option to enable log for a request function
+- feat: added format exception if unable to convert json to model
+- chore: removed request model since it's no longer being used
+
 # 0.3.1
 
 - docs: spell corrections
-- dev: added pedantic as linter for package
+- refactor: added pedantic as linter for package
 # 0.3.0
 
 - feat: use of copy with to retain model data on state change
