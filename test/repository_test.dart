@@ -79,4 +79,26 @@ void main() {
           throwsException);
     });
   });
+
+  group('local', () {
+    test('returns a Post if the http call completes successfully', () async {
+      final repository = GereralRepository();
+
+      expect(
+          await repository.local(
+            '{"title": "Test"}',
+          ),
+          isA<dynamic>());
+    });
+
+    test('throws an exception if the http call completes with an error', () {
+      final repository = GereralRepository();
+
+      expect(
+          repository.local(
+            '{"title": "Test"Nice',
+          ),
+          throwsException);
+    });
+  });
 }

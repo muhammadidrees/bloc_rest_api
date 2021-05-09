@@ -136,6 +136,34 @@ class GereralRepository {
     return responseJson;
   }
 
+  /// Used to convert a locally provided [json] String to json Map
+  Future<Map<String, dynamic>> local(
+    String json, {
+    bool enableLogs = false,
+  }) async {
+    if (enableLogs) {
+      developer.log(
+        'JSON String: $json',
+        name: 'package.bloc_rest_api.local',
+      );
+    }
+
+    var rawResponse;
+    try {
+      rawResponse = jsonDecode(json);
+    } catch (e) {
+      throw Exception(e.toString());
+    } finally {
+      if (enableLogs) {
+        developer.log(
+          'Raw JSON: ${rawResponse}',
+          name: 'package.bloc_rest_api.local',
+        );
+      }
+    }
+    return rawResponse;
+  }
+
   /// gerenal HTTP code responses
   dynamic _response(http.Response response) {
     switch (response.statusCode) {
