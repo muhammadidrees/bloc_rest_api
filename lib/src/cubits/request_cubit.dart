@@ -3,7 +3,7 @@ part of 'cubits.dart';
 class RequestCubit<T> extends Cubit<RequestState<T>> {
   RequestCubit({
     this.fromMap,
-    HttpClient httpClient,
+    http.Client httpClient,
   })  : httpClient = httpClient ?? http.Client(),
         super(RequestState<T>.empty());
 
@@ -143,11 +143,33 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     );
   }
 
+  /// Used to convert a locally provided [json] String to object [T]
+  ///
+  /// Use the [enableLog] flag to show logs for the request in debug
+  /// console
+  void localRequest(
+    String json, {
+    bool enableLogs = false,
+  }) async {
+    // check if json is provided
+    assert(!(['', null].contains(json)), 'JSON string is required!');
+
+    request(
+      GereralRepository()
+          .local(
+            json,
+            enableLogs: enableLogs,
+          )
+          .then(
+            (value) => toModel(fromMap, value),
+          ),
+    );
+  }
+
   /// This function converts th given [json] to model [T] using the
   /// funtion [fromMap] and returns the model
   ///
   /// In case of conversation failure it throws [FormatException]
-
   T toModel(T Function(dynamic json) fromMap, Map<String, dynamic> json) {
     T result;
     try {
