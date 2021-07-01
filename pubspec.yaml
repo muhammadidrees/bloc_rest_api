@@ -3,7 +3,7 @@ description: A generic bloc package to implement REST APIs easily in flutter.
 version: 0.3.2
 homepage: https://github.com/muhammadidrees/bloc_rest_api
 
-environment:
+environment: 
   sdk: ">=2.7.0 <3.0.0"
   flutter: ">=1.17.0"
 
@@ -22,5 +22,6 @@ dev_dependencies:
     sdk: flutter
   mockito: ^4.1.3
   pedantic: ^1.9.2
+  bloc_test: ^7.1.0
 
 flutter:
