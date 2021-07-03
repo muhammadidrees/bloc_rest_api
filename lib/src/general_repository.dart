@@ -41,7 +41,7 @@ class GereralRepository {
         name: 'package.bloc_rest_api.$handle',
       );
       developer.log(
-        'Request Header: ${jsonEncode(_header)}}',
+        'Request Header: ${jsonEncode(_header)}',
         name: 'package.bloc_rest_api.$handle',
       );
     }
@@ -63,7 +63,7 @@ class GereralRepository {
     } finally {
       if (enableLogs) {
         developer.log(
-          'Request Response Status: ${rawResponse.statusCode}',
+          'Request Response Status: ${rawResponse?.statusCode}',
           name: 'package.bloc_rest_api.$handle',
         );
         developer.log(
@@ -109,11 +109,11 @@ class GereralRepository {
         name: 'package.bloc_rest_api.$handle',
       );
       developer.log(
-        'Request Header: ${jsonEncode(_header)}}',
+        'Request Header: ${jsonEncode(_header)}',
         name: 'package.bloc_rest_api.$handle',
       );
       developer.log(
-        'Request Body: ${jsonEncode(body)}}',
+        'Request Body: ${jsonEncode(body)}',
         name: 'package.bloc_rest_api.$handle',
       );
     }
@@ -126,7 +126,7 @@ class GereralRepository {
             body: body,
             headers: _header,
           )
-          .timeout(_timeOut);
+          ?.timeout(_timeOut);
       responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
@@ -135,7 +135,7 @@ class GereralRepository {
     } finally {
       if (enableLogs) {
         developer.log(
-          'Request Response Status: ${rawResponse.statusCode}',
+          'Request Response Status: ${rawResponse?.statusCode}',
           name: 'package.bloc_rest_api.$handle',
         );
         developer.log(
@@ -177,7 +177,7 @@ class GereralRepository {
 
   /// gerenal HTTP code responses
   dynamic _response(http.Response response) {
-    switch (response.statusCode) {
+    switch (response?.statusCode) {
       case 200:
         var responseJson = json.decode(response.body.toString());
         // print(responseJson);
@@ -190,7 +190,7 @@ class GereralRepository {
       case 500:
       default:
         throw FetchDataException(
-            'Something went wrong, please try again later.\n\nStatus Code : ${response.statusCode}');
+            'Something went wrong, please try again later.\n\nStatus Code : ${response?.statusCode}');
     }
   }
 }
