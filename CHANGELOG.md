@@ -1,6 +1,21 @@
+# 0.4.0
+
+- feat: added functionality to read local json
+- feat: added timeOut reference for request function to override global behaviour
+- fix: assertions being caught
+- fix: removed extra bracket from log
+- docs: added example for local read, log feature and timeOut
+- docs: added badges :)
+- docs: updated old examples
+- refactor: achieved 100% code coverage
+- refactor: added padentic linter
+- refactor: avoided dublication for hydrated cubit and extended the existing cubit instead
+- chore: removed unnecessary code and imports
+
 # 0.3.2
 
 - feat: added option to enable log for a request function
+- feat: used copyWith to allow cubit to retain model data on error and loading states
 - feat: added format exception if unable to convert json to model
 - chore: removed request model since it's no longer being used
 
