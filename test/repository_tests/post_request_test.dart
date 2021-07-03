@@ -34,6 +34,7 @@ void main() {
               handle: 'posts/1',
               body: {'post': 1},
               baseUrl: 'https://jsonplaceholder.typicode.com/',
+              enableLogs: true,
             ),
             isA<Map<String, dynamic>>(),
           );
