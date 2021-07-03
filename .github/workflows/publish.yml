@@ -1,4 +1,4 @@
-name: Publish Package
+name: build
 
 on:
   pull_request:
@@ -20,10 +20,19 @@ jobs:
           flutter-version: '2.0.4'
       - name: Install dependencies
         run: flutter pub get
+
       - name: Analyze
         run: flutter analyze
+      
       - name: Run tests
-        run: flutter test
+        run: flutter test --coverage
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: coverage/lcov.info
+        
       - name: Setup Pub Credentials
         shell: bash
         env:
@@ -33,7 +42,9 @@ jobs:
           PUB_DEV_PUBLISH_EXPIRATION: ${{ secrets.PUB_DEV_PUBLISH_EXPIRATION }}
         run: |
           sh ./pub_login.sh
+      
       - name: Check Publish Warnings
         run: pub publish --dry-run
+      
       - name: Publish Package
         run: pub publish -f

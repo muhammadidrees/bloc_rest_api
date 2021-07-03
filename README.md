@@ -1,8 +1,19 @@
 # Bloc REST API
 
+<p>
+<a href="https://pub.dev/packages/bloc_rest_api"><img src="https://img.shields.io/pub/v/bloc_rest_api" alt="Pub"></a>
+<a href="https://github.com/muhammadidrees/bloc_rest_api/actions"><img src="https://github.com/muhammadidrees/bloc_rest_api/actions/workflows/publish.yml/badge.svg" alt="build"></a>
+<a href="https://app.codecov.io/gh/muhammadidrees/bloc_rest_api"><img src="https://codecov.io/gh/muhammadidrees/bloc_rest_api/branch/master/graph/badge.svg" alt="codecov"></a>
+<a href="https://github.com/dart-lang/lints#migrating-from-packagepedantic"><img src="https://img.shields.io/badge/style-pedantic-40c4ff.svg" alt="style: pedantic"></a>
+<a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/license-MIT-purple.svg" alt="License: MIT"></a>
+
+</p>
+
 A flutter package to easily integrate and manage REST APIs. Now all you need to do is create a model class and all the rest is taken care of. :)
 
 > Before using the package fimiliarize yourself with [bloc library](https://bloclibrary.dev/#/)
+
+__FYI__: This package works on all platforms (Android, iOS, Web, Linux, Windows, Mac).
 
 ## Usage
 
@@ -26,6 +37,8 @@ flutter packages get
 ```
 
 Now create a model class for the data that you want to fetch from the internet. This can easily be done by using online tools such as [QuickType](https://app.quicktype.io/)
+
+> Note: Don't forget to use [Equatable](https://pub.dev/packages/equatable) or any other comparision method to compare the models as it is the decision maker when it comes to switching state in bloc
 
 In our case we'll be creating a model for Post.
 
@@ -72,13 +85,13 @@ MultiBlocProvider(
     // for single model
     BlocProvider(
       create: (context) => RequestCubit<PostModel>(
-        (json) => PostModel.fromJson(json),
+        fromMap: (json) => PostModel.fromJson(json),
       ),
     ),
     // for list of posts simply update type and fromMap method
     BlocProvider(
       create: (context) => RequestCubit<List<PostModel>>(
-        (json) =>
+        fromMap: (json) =>
             List<PostModel>.from(json.map((x) => PostModel.fromJson(x))),
       ),
     ),
@@ -96,6 +109,24 @@ context.read<RequestCubit<PostModel>>().getRequest(
     );
 ```
 
+You can also enable logs for requests in order to view logs happening for a specific function by setting `enableLogs` flag to `true`.
+
+```dart
+context.read<RequestCubit<PostModel>>().getRequest(
+      ...
+      enableLogs: true,
+    );
+```
+
+Want to use local json strings? Don't worry the package got you covered.
+
+```dart
+context.read<RequestCubit<PostModel>>().localRequest(
+      'json string here',
+    );
+```
+
+> Note: You can always convert local json file to string using `loadString('path/to/asset')` from `import 'package:flutter/services.dart'`
 
 In case you are dealing with complex data and want to handle the mapping yourself you can you the request method that takes a function that returns Future of type T as parameter.
 
