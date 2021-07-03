@@ -82,8 +82,16 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
       Map<String, String> header,
       T Function(dynamic json) fromMap,
       bool enableLogs}) async {
+    // check if fromMap function is provided
     assert((fromMap != null || this.fromMap != null),
         'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
+
+    // check if url is provided
+    assert(
+        !(['', null].contains(baseUrl) &&
+            ['', null].contains(ApiConfig.baseUrl)),
+        'Both baseUrl and ApiConfig cannot be set as null at the same time');
+
     request(
       GereralRepository()
           .get(
@@ -125,8 +133,15 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     T Function(dynamic json) fromMap,
     bool enableLogs,
   }) async {
+    // check if fromMap function is provided
     assert((fromMap != null || this.fromMap != null),
         'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
+
+    // check if url is provided
+    assert(
+        !(['', null].contains(baseUrl) &&
+            ['', null].contains(ApiConfig.baseUrl)),
+        'Both baseUrl and ApiConfig cannot be set as null at the same time');
     request(
       GereralRepository()
           .post(

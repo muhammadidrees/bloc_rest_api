@@ -25,12 +25,6 @@ class GereralRepository {
     Map<String, String> header,
     bool enableLogs = false,
   }) async {
-    // check if url is provided
-    assert(
-        !(['', null].contains(baseUrl) &&
-            ['', null].contains(ApiConfig.baseUrl)),
-        'Both baseUrl and ApiConfig cannot be set as null at the same time');
-
     if (enableLogs) {
       developer.log(
         'Request URl: ${(baseUrl ?? ApiConfig.baseUrl) + handle}',
@@ -89,12 +83,6 @@ class GereralRepository {
     Map<String, String> header,
     bool enableLogs = false,
   }) async {
-    // check if url is provided
-    assert(
-        !(['', null].contains(baseUrl) &&
-            ['', null].contains(ApiConfig.baseUrl)),
-        'Both baseUrl and ApiConfig cannot be set as null at the same time');
-
     if (enableLogs) {
       developer.log(
         'Request URl: ${(baseUrl ?? ApiConfig.baseUrl) + handle}',

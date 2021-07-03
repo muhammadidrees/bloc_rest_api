@@ -71,12 +71,13 @@ void main() {
           .thenAnswer((_) async => http.Response('Unauthorized', 401));
 
       expect(
-          repository.post(
-            client,
-            handle: 'posts/1',
-            baseUrl: 'https://jsonplaceholder.typicode.com/',
-          ),
-          throwsException);
+        repository.post(
+          client,
+          handle: 'posts/1',
+          baseUrl: 'https://jsonplaceholder.typicode.com/',
+        ),
+        throwsException,
+      );
     });
   });
 
@@ -95,10 +96,11 @@ void main() {
       final repository = GereralRepository();
 
       expect(
-          repository.local(
-            '{"title": "Test"Nice',
-          ),
-          throwsException);
+        repository.local(
+          '{"title": "Test"Nice',
+        ),
+        throwsException,
+      );
     });
   });
 }
