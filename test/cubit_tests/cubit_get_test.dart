@@ -79,42 +79,59 @@ void main() {
     );
 
     blocTest(
-      'emits [empty] when emptyCubit() is called',
+      'emits [loading, failure] on timeout fail',
       build: () => cubit,
-      seed: RequestState<PostModel>(
-        status: RequestStatus.success,
-        model: PostModel.fromJson(
-          jsonDecode(PostModel.singlePostResponse),
-        ),
-      ),
+      wait: Duration(milliseconds: 400),
       act: (bloc) {
-        return bloc.emptyCubit();
+        when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+            .thenAnswer(
+          (_) async {
+            await Future.delayed(const Duration(milliseconds: 400), () {});
+            return http.Response('{"title": "Test"}', 200);
+          },
+        );
+
+        return bloc.getRequest(
+          baseUrl: 'https://jsonplaceholder.typicode.com/',
+          handle: 'posts/1',
+          enableLogs: true,
+          timeOut: Duration(milliseconds: 300),
+        );
       },
       expect: [
+        RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
-          status: RequestStatus.empty,
+          status: RequestStatus.failure,
+          errorMessage: TimeOutExceptionC().toString(),
         ),
       ],
     );
 
     blocTest(
-      'updates model manually by calling updateModel',
+      'emits [loading, success] when response within timeout',
       build: () => cubit,
-      seed: RequestState<PostModel>(
-        status: RequestStatus.success,
-        model: PostModel.fromJson(
-          jsonDecode(PostModel.singlePostResponse),
-        ),
-      ),
+      wait: Duration(milliseconds: 200),
       act: (bloc) {
-        return bloc.updateModel(
-          PostModel(userId: 2, id: 2),
+        when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+            .thenAnswer(
+          (_) async {
+            await Future.delayed(const Duration(milliseconds: 200), () {});
+            return http.Response('{"title": "Test"}', 200);
+          },
+        );
+
+        return bloc.getRequest(
+          baseUrl: 'https://jsonplaceholder.typicode.com/',
+          handle: 'posts/1',
+          enableLogs: true,
+          timeOut: Duration(milliseconds: 300),
         );
       },
       expect: [
+        RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
-          status: RequestStatus.success,
-          model: PostModel(userId: 2, id: 2),
+          status: RequestStatus.failure,
+          errorMessage: TimeOutExceptionC().toString(),
         ),
       ],
     );

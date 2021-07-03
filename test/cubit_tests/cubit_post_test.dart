@@ -83,6 +83,67 @@ void main() {
         ),
       ],
     );
+
+    blocTest(
+      'emits [loading, failure] on timeout fail',
+      build: () => cubit,
+      wait: Duration(milliseconds: 400),
+      act: (bloc) {
+        when(client.post(
+          'https://jsonplaceholder.typicode.com/posts/1',
+          body: {'post': 1},
+        )).thenAnswer(
+          (_) async {
+            await Future.delayed(const Duration(milliseconds: 400), () {});
+            return http.Response('{"title": "Test"}', 200);
+          },
+        );
+
+        return bloc.postRequest(
+          baseUrl: 'https://jsonplaceholder.typicode.com/',
+          handle: 'posts/1',
+          body: {'post': 1},
+          enableLogs: true,
+          timeOut: Duration(milliseconds: 300),
+        );
+      },
+      expect: [
+        RequestState<PostModel>(status: RequestStatus.loading),
+        RequestState<PostModel>(
+          status: RequestStatus.failure,
+          errorMessage: TimeOutExceptionC().toString(),
+        ),
+      ],
+    );
+
+    blocTest(
+      'emits [loading, success] when response within timeout',
+      build: () => cubit,
+      wait: Duration(milliseconds: 200),
+      act: (bloc) {
+        when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
+            .thenAnswer(
+          (_) async {
+            await Future.delayed(const Duration(milliseconds: 200), () {});
+            return http.Response('{"title": "Test"}', 200);
+          },
+        );
+
+        return bloc.postRequest(
+          baseUrl: 'https://jsonplaceholder.typicode.com/',
+          handle: 'posts/1',
+          enableLogs: true,
+          timeOut: Duration(milliseconds: 300),
+        );
+      },
+      expect: [
+        RequestState<PostModel>(status: RequestStatus.loading),
+        RequestState<PostModel>(
+          status: RequestStatus.failure,
+          errorMessage: TimeOutExceptionC().toString(),
+        ),
+      ],
+    );
     blocTest(
       'on failure retain data of previous success',
       build: () => cubit,

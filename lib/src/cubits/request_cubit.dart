@@ -62,7 +62,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// setting or can be overidden as it is given as an option parameter
   /// in the function.
   ///
-  /// Same thing applies for the [header] parameter
+  /// Same thing applies for the [header] and [timeOut] parameter
   ///
   /// The [fromMap] function is used the convert the response json to
   /// model [T] this can either be provided during bloc initialization
@@ -71,12 +71,14 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   ///
   /// Use the [enableLog] flag to show logs for the request in debug
   /// console
-  Future<void> getRequest(
-      {@required String handle,
-      String baseUrl,
-      Map<String, String> header,
-      T Function(dynamic json) fromMap,
-      bool enableLogs}) async {
+  Future<void> getRequest({
+    @required String handle,
+    String baseUrl,
+    Map<String, String> header,
+    T Function(dynamic json) fromMap,
+    Duration timeOut,
+    bool enableLogs,
+  }) async {
     // check if fromMap function is provided
     assert((fromMap != null || this.fromMap != null),
         'fromMap function cannot be null!!! Either provide the fromMap function directly in this function or use the optional fromMap function while initializing the bloc');
@@ -94,6 +96,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
             handle: handle,
             baseUrl: baseUrl,
             header: header,
+            timeOut: timeOut,
             enableLogs: enableLogs,
           )
           .then(
@@ -111,7 +114,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// setting or can be overidden as it is given as an option parameter
   /// in the function.
   ///
-  /// Same thing applies for the [header] parameter
+  /// Same thing applies for the [header] and [timeOut] parameter
   ///
   /// The [fromMap] function is used the convert the response json to
   /// model [T] this can either be provided during bloc initialization
@@ -126,6 +129,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     Map<String, String> header,
     dynamic body,
     T Function(dynamic json) fromMap,
+    Duration timeOut,
     bool enableLogs,
   }) async {
     // check if fromMap function is provided
@@ -145,6 +149,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
             baseUrl: baseUrl,
             header: header,
             body: body,
+            timeOut: timeOut,
             enableLogs: enableLogs,
           )
           .then(
