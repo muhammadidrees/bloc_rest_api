@@ -88,7 +88,7 @@ class GereralRepository {
   Future<Map<String, dynamic>> post(
     http.Client client, {
     @required String handle,
-    String body,
+    dynamic body,
     String baseUrl,
     Map<String, String> header,
     Duration timeOut,

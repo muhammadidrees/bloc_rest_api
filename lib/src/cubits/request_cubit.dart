@@ -129,7 +129,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
     @required String handle,
     String baseUrl,
     Map<String, String> header,
-    String body,
+    dynamic body,
     T Function(dynamic json) fromMap,
     bool enableLogs,
   }) async {
