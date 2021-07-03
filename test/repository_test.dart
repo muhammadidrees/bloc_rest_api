@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:bloc_rest_api/bloc_rest_api.dart';
+import 'package:bloc_rest_api/src/models/models.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
@@ -8,47 +11,189 @@ import 'package:http/http.dart' as http;
 class MockClient extends Mock implements http.Client {}
 
 void main() {
-  group('getPost', () {
-    test('returns a Post if the http call completes successfully', () async {
-      final client = MockClient();
-      final repository = GereralRepository();
+  group('get request', () {
+    final client = MockClient();
+    final repository = GereralRepository();
 
-      when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
-          .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
+    group('basic functionality', () {
+      test(
+        'returns json Map if the http call completes successfully',
+        () async {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async => http.Response('{"title": "Test"}', 200),
+          );
 
-      expect(
-          await repository.get(
-            client,
-            handle: 'posts/1',
-            baseUrl: 'https://jsonplaceholder.typicode.com/',
-          ),
-          isA<dynamic>());
+          expect(
+            await repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            isA<Map<String, dynamic>>(),
+          );
+        },
+      );
+
+      test(
+        'throws an FetchDataException if the http call completes with an error',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async => http.Response('Not Found', 404),
+          );
+
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            throwsA(isA<FetchDataException>()),
+          );
+        },
+      );
     });
 
-    test('throws an exception if the http call completes with an error', () {
-      final client = MockClient();
-      final repository = GereralRepository();
+    group('status code exceptions test', () {
+      test(
+        'throws an UnauthorisedException if the http call completes with status code 401',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async => http.Response('Unauthorized', 401),
+          );
 
-      // Use Mockito to return an unsuccessful response when it calls the
-      // provided http.Client.
-      when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
-          .thenAnswer((_) async => http.Response('Not Found', 404));
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            throwsA(isA<UnauthorisedException>()),
+          );
+        },
+      );
 
-      expect(
-          repository.get(
-            client,
-            handle: 'posts/1',
-            baseUrl: 'https://jsonplaceholder.typicode.com/',
-          ),
-          throwsException);
+      test(
+        'throws an UnauthorisedException if the http call completes with status code 403',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async => http.Response('Unauthorized', 403),
+          );
+
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            throwsA(isA<UnauthorisedException>()),
+          );
+        },
+      );
+
+      test(
+        'throws an UnauthorisedException if the http call completes with status code 500',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async => http.Response('Server Error', 500),
+          );
+
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            throwsA(isA<FetchDataException>()),
+          );
+        },
+      );
+    });
+
+    group('Timeout check', () {
+      test(
+        'pass if the http call returns before the given timeout time',
+        () async {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async {
+              await Future.delayed(const Duration(milliseconds: 200), () {});
+              return http.Response('{"title": "Test"}', 200);
+            },
+          );
+
+          expect(
+            await repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+              timeOut: Duration(seconds: 1),
+            ),
+            isA<Map<String, dynamic>>(),
+          );
+        },
+      );
+      test(
+        'throws an TimeOutException if the http call timesout by the given timeout time',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async {
+              await Future.delayed(const Duration(milliseconds: 400), () {});
+              return http.Response('{"title": "Test"}', 200);
+            },
+          );
+
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+              timeOut: Duration(milliseconds: 300),
+            ),
+            throwsA(isA<TimeOutExceptionC>()),
+          );
+        },
+      );
+    });
+
+    group('Socket Exception / No Internet', () {
+      test(
+        'throws an UnauthorisedException if the http call completes with status code 500',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenThrow(SocketException('No internet connection'));
+
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            throwsA(isA<FetchDataException>()),
+          );
+        },
+      );
     });
   });
 
-  group('postPost', () {
-    test('returns a Post if the http call completes successfully', () async {
-      final client = MockClient();
-      final repository = GereralRepository();
+  group('post request', () {
+    final client = MockClient();
+    final repository = GereralRepository();
 
+    test('returns a Post if the http call completes successfully', () async {
       when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
           .thenAnswer((_) async => http.Response('{"title": "Test"}', 200));
 
@@ -58,13 +203,10 @@ void main() {
             handle: 'posts/1',
             baseUrl: 'https://jsonplaceholder.typicode.com/',
           ),
-          isA<dynamic>());
+          isA<Map<String, dynamic>>());
     });
 
     test('throws an exception if the http call completes with an error', () {
-      final client = MockClient();
-      final repository = GereralRepository();
-
       // Use Mockito to return an unsuccessful response when it calls the
       // provided http.Client.
       when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
@@ -76,15 +218,15 @@ void main() {
           handle: 'posts/1',
           baseUrl: 'https://jsonplaceholder.typicode.com/',
         ),
-        throwsException,
+        throwsA(isA<UnauthorisedException>()),
       );
     });
   });
 
   group('local', () {
-    test('returns a Post if the http call completes successfully', () async {
-      final repository = GereralRepository();
+    final repository = GereralRepository();
 
+    test('returns a Post if the http call completes successfully', () async {
       expect(
           await repository.local(
             '{"title": "Test"}',
@@ -93,8 +235,6 @@ void main() {
     });
 
     test('throws an exception if the http call completes with an error', () {
-      final repository = GereralRepository();
-
       expect(
         repository.local(
           '{"title": "Test"Nice',
