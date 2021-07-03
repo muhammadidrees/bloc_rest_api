@@ -23,15 +23,25 @@ class GereralRepository {
     @required String handle,
     String baseUrl,
     Map<String, String> header,
+    Duration timeOut,
     bool enableLogs = false,
   }) async {
+    // final url to which call will be made
+    var _url = (baseUrl ?? ApiConfig.baseUrl) + handle;
+
+    // final header which will be used to make call
+    var _header = header ?? ApiConfig.header;
+
+    // final timeout to be used with request
+    var _timeOut = timeOut ?? ApiConfig.responseTimeOut;
+
     if (enableLogs) {
       developer.log(
-        'Request URl: ${(baseUrl ?? ApiConfig.baseUrl) + handle}',
+        'Request URl: $_url',
         name: 'package.bloc_rest_api.$handle',
       );
       developer.log(
-        'Request Header: ${jsonEncode(header ?? ApiConfig.header)}}',
+        'Request Header: ${jsonEncode(_header)}}',
         name: 'package.bloc_rest_api.$handle',
       );
     }
@@ -41,10 +51,10 @@ class GereralRepository {
     try {
       rawResponse = await client
           .get(
-            (baseUrl ?? ApiConfig.baseUrl) + handle,
-            headers: header ?? ApiConfig.header,
+            _url,
+            headers: _header,
           )
-          ?.timeout(ApiConfig.responseTimeOut);
+          ?.timeout(_timeOut);
       responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
@@ -81,15 +91,25 @@ class GereralRepository {
     String body,
     String baseUrl,
     Map<String, String> header,
+    Duration timeOut,
     bool enableLogs = false,
   }) async {
+    // final url to which call will be made
+    var _url = (baseUrl ?? ApiConfig.baseUrl) + handle;
+
+    // final header which will be used to make call
+    var _header = header ?? ApiConfig.header;
+
+    // final timeout to be used with request
+    var _timeOut = timeOut ?? ApiConfig.responseTimeOut;
+
     if (enableLogs) {
       developer.log(
-        'Request URl: ${(baseUrl ?? ApiConfig.baseUrl) + handle}',
+        'Request URl: $_url',
         name: 'package.bloc_rest_api.$handle',
       );
       developer.log(
-        'Request Header: ${jsonEncode(header ?? ApiConfig.header)}}',
+        'Request Header: ${jsonEncode(_header)}}',
         name: 'package.bloc_rest_api.$handle',
       );
       developer.log(
@@ -101,9 +121,12 @@ class GereralRepository {
     var responseJson;
     try {
       rawResponse = await client
-          .post((baseUrl ?? ApiConfig.baseUrl) + handle,
-              body: body, headers: header ?? ApiConfig.header)
-          .timeout(ApiConfig.responseTimeOut);
+          .post(
+            _url,
+            body: body,
+            headers: _header,
+          )
+          .timeout(_timeOut);
       responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
