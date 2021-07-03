@@ -40,14 +40,14 @@ class RequestState<T> extends Equatable {
   /// This methods helps in persisting the data i.e. [model]
   /// that has once entered the bloc state.
   RequestState<T> copyWith({
-    RequestStatus status,
+    @required RequestStatus status,
     T model,
     String errorMessage,
   }) =>
       RequestState<T>(
-        status: status ?? status,
-        model: model ?? model,
-        errorMessage: errorMessage ?? errorMessage,
+        status: status,
+        model: model ?? this.model,
+        errorMessage: errorMessage ?? this.errorMessage,
       );
 
   /// The status of the current state
@@ -68,5 +68,5 @@ class RequestState<T> extends Equatable {
   List<Object> get props => [status, model];
 
   @override
-  String toString() => status.toString();
+  String toString() => '${status.toString()} -- ${model.toString()}';
 }

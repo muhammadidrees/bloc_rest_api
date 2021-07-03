@@ -14,11 +14,6 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// [T] type model
   final T Function(dynamic json) fromMap;
 
-  /// Emits current state of bloc
-  void emitCurrentState() {
-    emit(state);
-  }
-
   /// Empties out the bloc and emits the empty state
   void emptyCubit() {
     emit(RequestState<T>.empty());

@@ -30,6 +30,7 @@ void main() {
               client,
               handle: 'posts/1',
               baseUrl: 'https://jsonplaceholder.typicode.com/',
+              enableLogs: true,
             ),
             isA<Map<String, dynamic>>(),
           );

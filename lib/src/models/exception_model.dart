@@ -27,10 +27,6 @@ class UnauthorisedException extends CustomException {
   UnauthorisedException([String message]) : super(message, 'Unauthorised: ');
 }
 
-class InvalidInputException extends CustomException {
-  InvalidInputException([String message]) : super(message, 'Invalid Input: ');
-}
-
 class TimeOutExceptionC extends CustomException {
   TimeOutExceptionC(
       [String message =

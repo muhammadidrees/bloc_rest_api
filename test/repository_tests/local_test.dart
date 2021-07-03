@@ -10,6 +10,7 @@ void main() {
       expect(
           await repository.local(
             '{"title": "Test"}',
+            enableLogs: true,
           ),
           isA<Map<String, dynamic>>());
     });

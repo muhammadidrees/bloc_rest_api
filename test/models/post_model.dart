@@ -69,7 +69,7 @@ class PostModel extends Equatable {
       );
 
   factory PostModel.fromJson(Map<String, dynamic> json) => PostModel(
-        userId: json['userId'],
+        userId: int.parse(json['userId'].toString()),
         id: json['id'],
         title: json['title'],
         body: json['body'],
@@ -83,7 +83,9 @@ class PostModel extends Equatable {
       };
 
   @override
-  List<Object> get props => [userId, id];
+  List<Object> get props => [
+        userId,
+      ];
 
   @override
   String toString() => '$id -- $title';

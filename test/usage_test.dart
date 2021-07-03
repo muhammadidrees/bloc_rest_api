@@ -117,4 +117,60 @@ void main() {
       );
     },
   );
+
+  group(
+    'check baseUrl for post function assertion',
+    () {
+      final client = MockClient();
+
+      when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+          .thenAnswer(
+        (_) async => http.Response(
+          PostModel.singlePostResponse,
+          200,
+        ),
+      );
+
+      final cubit = RequestCubit<PostModel>(
+        fromMap: (json) => PostModel.fromJson(json),
+        httpClient: client,
+      );
+
+      blocTest(
+        'pass if baseUrl is given with request function',
+        build: () => cubit,
+        act: (bloc) => bloc.postRequest(
+          baseUrl: 'https://jsonplaceholder.typicode.com/',
+          handle: 'posts/1',
+        ),
+      );
+
+      blocTest(
+        'expect assertion if baseUrl is neither given in config nor with request function',
+        build: () {
+          ApiConfig.baseUrl = '';
+
+          return cubit;
+        },
+        act: (bloc) => expect(
+          bloc.postRequest(
+            handle: 'posts/1',
+          ),
+          throwsAssertionError,
+        ),
+      );
+
+      blocTest(
+        'pass if baseUrl is given in config',
+        build: () {
+          ApiConfig.baseUrl = 'https://jsonplaceholder.typicode.com/';
+
+          return cubit;
+        },
+        act: (bloc) => bloc.postRequest(
+          handle: 'posts/1',
+        ),
+      );
+    },
+  );
 }
