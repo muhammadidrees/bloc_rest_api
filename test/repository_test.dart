@@ -59,6 +59,26 @@ void main() {
 
     group('status code exceptions test', () {
       test(
+        'throws an BadRequestException if the http call completes with status code 500',
+        () {
+          when(
+            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+          ).thenAnswer(
+            (_) async => http.Response('BadRequestException', 400),
+          );
+
+          expect(
+            repository.get(
+              client,
+              handle: 'posts/1',
+              baseUrl: 'https://jsonplaceholder.typicode.com/',
+            ),
+            throwsA(isA<BadRequestException>()),
+          );
+        },
+      );
+
+      test(
         'throws an UnauthorisedException if the http call completes with status code 401',
         () {
           when(
