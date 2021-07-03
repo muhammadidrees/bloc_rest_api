@@ -1,3 +1,7 @@
+# 0.4.0+1
+
+- chore: github action publish issue resolution
+
 # 0.4.0
 
 - feat: added functionality to read local json
