@@ -20,7 +20,8 @@ void main() {
         'returns json Map if the http call completes successfully',
         () async {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async => http.Response('{"title": "Test"}', 200),
           );
@@ -41,7 +42,8 @@ void main() {
         'throws an FetchDataException if the http call completes with an error',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async => http.Response('Not Found', 404),
           );
@@ -63,7 +65,8 @@ void main() {
         'throws an BadRequestException if the http call completes with status code 500',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async => http.Response('BadRequestException', 400),
           );
@@ -83,7 +86,8 @@ void main() {
         'throws an UnauthorisedException if the http call completes with status code 401',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async => http.Response('Unauthorized', 401),
           );
@@ -103,7 +107,8 @@ void main() {
         'throws an UnauthorisedException if the http call completes with status code 403',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async => http.Response('Unauthorized', 403),
           );
@@ -123,7 +128,8 @@ void main() {
         'throws an UnauthorisedException if the http call completes with status code 500',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async => http.Response('Server Error', 500),
           );
@@ -145,7 +151,8 @@ void main() {
         'pass if the http call returns before the given timeout time',
         () async {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async {
               await Future.delayed(const Duration(milliseconds: 200), () {});
@@ -168,7 +175,8 @@ void main() {
         'throws an TimeOutException if the http call timesout by the given timeout time',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenAnswer(
             (_) async {
               await Future.delayed(const Duration(milliseconds: 400), () {});
@@ -194,7 +202,8 @@ void main() {
         'throws an UnauthorisedException if the http call completes with status code 500',
         () {
           when(
-            client.get('https://jsonplaceholder.typicode.com/posts/1'),
+            client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')),
           ).thenThrow(SocketException('No internet connection'));
 
           expect(

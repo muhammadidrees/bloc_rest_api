@@ -25,7 +25,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.success,
@@ -45,7 +45,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.failure,
@@ -63,7 +63,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.failure,
@@ -74,7 +74,7 @@ void main() {
     blocTest(
       'on failure retain data of previous success',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel(userId: 1, id: 1),
       ),
@@ -84,7 +84,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.loading,
           model: PostModel(userId: 1, id: 1),

@@ -29,7 +29,7 @@ void main() {
     blocTest(
       'emits [empty] when emptyCubit() is called',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel.fromJson(
           jsonDecode(PostModel.singlePostResponse),
@@ -38,7 +38,7 @@ void main() {
       act: (bloc) {
         return bloc.emptyCubit();
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.empty,
         ),
@@ -48,7 +48,7 @@ void main() {
     blocTest(
       'updates model manually by calling updateModel',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel.fromJson(
           jsonDecode(PostModel.singlePostResponse),
@@ -59,7 +59,7 @@ void main() {
           PostModel(userId: 2, id: 2),
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.success,
           model: PostModel(userId: 2, id: 2),

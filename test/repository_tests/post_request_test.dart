@@ -21,7 +21,7 @@ void main() {
         () async {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -46,7 +46,7 @@ void main() {
         () async {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
             ),
           ).thenAnswer(
             (_) async => http.Response('{"title": "Test"}', 200),
@@ -68,7 +68,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -94,7 +94,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -118,7 +118,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -142,7 +142,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -166,7 +166,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -192,7 +192,7 @@ void main() {
         () async {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -219,7 +219,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenAnswer(
@@ -249,7 +249,7 @@ void main() {
         () {
           when(
             client.post(
-              'https://jsonplaceholder.typicode.com/posts/1',
+              Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
               body: {'post': 1},
             ),
           ).thenThrow(SocketException('No internet connection'));

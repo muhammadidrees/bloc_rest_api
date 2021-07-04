@@ -29,6 +29,9 @@ class GereralRepository {
     // final url to which call will be made
     var _url = (baseUrl ?? ApiConfig.baseUrl) + handle;
 
+    // uri to be passed to request
+    var _uri = Uri.parse(_url);
+
     // final header which will be used to make call
     var _header = header ?? ApiConfig.header;
 
@@ -51,7 +54,7 @@ class GereralRepository {
     try {
       rawResponse = await client
           .get(
-            _url,
+            _uri,
             headers: _header,
           )
           ?.timeout(_timeOut);
@@ -97,6 +100,9 @@ class GereralRepository {
     // final url to which call will be made
     var _url = (baseUrl ?? ApiConfig.baseUrl) + handle;
 
+    // uri to be passed to request
+    var _uri = Uri.parse(_url);
+
     // final header which will be used to make call
     var _header = header ?? ApiConfig.header;
 
@@ -122,7 +128,7 @@ class GereralRepository {
     try {
       rawResponse = await client
           .post(
-            _url,
+            _uri,
             body: body,
             headers: _header,
           )

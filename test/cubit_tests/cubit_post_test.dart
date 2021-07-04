@@ -36,7 +36,7 @@ void main() {
       build: () => cubit,
       act: (bloc) {
         when(client.post(
-          'https://jsonplaceholder.typicode.com/posts/1',
+          Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
           body: {'post': 1},
         )).thenAnswer(
             (_) async => http.Response(PostModel.singlePostResponse, 200));
@@ -48,7 +48,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.success,
@@ -64,7 +64,7 @@ void main() {
       build: () => cubit,
       act: (bloc) {
         when(client.post(
-          'https://jsonplaceholder.typicode.com/posts/1',
+          Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
           body: {'post': 1},
         )).thenAnswer((_) async => http.Response('NotFound', 404));
 
@@ -75,7 +75,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.failure,
@@ -90,7 +90,7 @@ void main() {
       wait: Duration(milliseconds: 400),
       act: (bloc) {
         when(client.post(
-          'https://jsonplaceholder.typicode.com/posts/1',
+          Uri.parse('https://jsonplaceholder.typicode.com/posts/1'),
           body: {'post': 1},
         )).thenAnswer(
           (_) async {
@@ -107,7 +107,7 @@ void main() {
           timeOut: Duration(milliseconds: 300),
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.failure,
@@ -121,7 +121,8 @@ void main() {
       build: () => cubit,
       wait: Duration(milliseconds: 200),
       act: (bloc) {
-        when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
+        when(client.post(
+                Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer(
           (_) async {
             await Future.delayed(const Duration(milliseconds: 200), () {});
@@ -136,7 +137,7 @@ void main() {
           timeOut: Duration(milliseconds: 300),
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(status: RequestStatus.loading),
         RequestState<PostModel>(
           status: RequestStatus.failure,
@@ -147,12 +148,13 @@ void main() {
     blocTest(
       'on failure retain data of previous success',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel(userId: 1, id: 1),
       ),
       act: (bloc) {
-        when(client.post('https://jsonplaceholder.typicode.com/posts/1'))
+        when(client.post(
+                Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));
 
         return bloc.postRequest(
@@ -162,7 +164,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.loading,
           model: PostModel(userId: 1, id: 1),

@@ -16,7 +16,8 @@ void main() {
     () {
       final client = MockClient();
 
-      when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+      when(client
+              .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
           .thenAnswer(
         (_) async => http.Response(
           PostModel.singlePostResponse,
@@ -71,7 +72,8 @@ void main() {
     () {
       final client = MockClient();
 
-      when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+      when(client
+              .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
           .thenAnswer(
         (_) async => http.Response(
           PostModel.singlePostResponse,
@@ -123,7 +125,8 @@ void main() {
     () {
       final client = MockClient();
 
-      when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+      when(client
+              .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
           .thenAnswer(
         (_) async => http.Response(
           PostModel.singlePostResponse,

@@ -2,11 +2,13 @@ import 'dart:convert';
 
 import 'package:bloc_rest_api/bloc_rest_api.dart';
 import 'package:bloc_rest_api/src/models/models.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 import 'package:bloc_test/bloc_test.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/models.dart';
 
@@ -19,7 +21,11 @@ void main() {
   HydratedRequestCubit<PostModel> cubit;
 
   setUpAll(() async {
-    HydratedBloc.storage = await HydratedStorage.build();
+    HydratedBloc.storage = await HydratedStorage.build(
+      storageDirectory: kIsWeb
+          ? HydratedStorage.webStorageDirectory
+          : await getTemporaryDirectory(),
+    );
   });
 
   tearDownAll(() {
@@ -69,7 +75,8 @@ void main() {
       'emits [loading, success] on successful request',
       build: () => cubit,
       act: (bloc) {
-        when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+        when(client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer(
                 (_) async => http.Response(PostModel.singlePostResponse, 200));
 
@@ -79,7 +86,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.loading,
         ),
@@ -96,7 +103,8 @@ void main() {
       'emits [loading, failure] on request fail',
       build: () => cubit,
       act: (bloc) {
-        when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+        when(client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));
 
         return bloc.getRequest(
@@ -105,7 +113,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.loading,
           model: PostModel.fromJson(
@@ -125,7 +133,7 @@ void main() {
     blocTest(
       'emits [empty] when emptyCubit() is called',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel.fromJson(
           jsonDecode(PostModel.singlePostResponse),
@@ -134,7 +142,7 @@ void main() {
       act: (bloc) {
         return bloc.emptyCubit();
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.empty,
         ),
@@ -144,7 +152,7 @@ void main() {
     blocTest(
       'updates model manually by calling updateModel',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel.fromJson(
           jsonDecode(PostModel.singlePostResponse),
@@ -155,7 +163,7 @@ void main() {
           PostModel(userId: 2, id: 2),
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.success,
           model: PostModel(userId: 2, id: 2),
@@ -166,12 +174,13 @@ void main() {
     blocTest(
       'on failure retain data of previous success',
       build: () => cubit,
-      seed: RequestState<PostModel>(
+      seed: () => RequestState<PostModel>(
         status: RequestStatus.success,
         model: PostModel(userId: 1, id: 1),
       ),
       act: (bloc) {
-        when(client.get('https://jsonplaceholder.typicode.com/posts/1'))
+        when(client
+                .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));
 
         return bloc.getRequest(
@@ -180,7 +189,7 @@ void main() {
           enableLogs: true,
         );
       },
-      expect: [
+      expect: () => [
         RequestState<PostModel>(
           status: RequestStatus.loading,
           model: PostModel(userId: 1, id: 1),
