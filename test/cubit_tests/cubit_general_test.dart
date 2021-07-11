@@ -2,18 +2,12 @@ import 'dart:convert';
 
 import 'package:bloc_rest_api/bloc_rest_api.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:mockito/mockito.dart';
-import 'package:http/http.dart' as http;
 import 'package:bloc_test/bloc_test.dart';
 
 import '../models/models.dart';
 
-// Create a MockClient using the Mock class provided by the Mockito package.
-// Create new instances of this class in each test.
-class MockClient extends Mock implements http.Client {}
-
 void main() {
-  RequestCubit<PostModel> cubit;
+  late RequestCubit<PostModel> cubit;
 
   setUp(() {
     cubit = RequestCubit<PostModel>(
@@ -35,7 +29,7 @@ void main() {
           jsonDecode(PostModel.singlePostResponse),
         ),
       ),
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.emptyCubit();
       },
       expect: () => [
@@ -54,7 +48,7 @@ void main() {
           jsonDecode(PostModel.singlePostResponse),
         ),
       ),
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.updateModel(
           PostModel(userId: 2, id: 2),
         );

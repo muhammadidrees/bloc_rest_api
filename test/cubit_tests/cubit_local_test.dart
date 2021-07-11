@@ -7,7 +7,7 @@ import 'package:bloc_test/bloc_test.dart';
 import '../models/models.dart';
 
 void main() {
-  RequestCubit<PostModel> cubit;
+  late RequestCubit<PostModel> cubit;
 
   setUp(() {
     cubit = RequestCubit<PostModel>(
@@ -19,7 +19,7 @@ void main() {
     blocTest(
       'emits [loading, success] on successful request',
       build: () => cubit,
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.localRequest(
           PostModel.singlePostResponse,
           enableLogs: true,
@@ -39,7 +39,7 @@ void main() {
     blocTest(
       'emits [loading, failure] on request fail',
       build: () => cubit,
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.localRequest(
           "{'bad': 1}",
           enableLogs: true,
@@ -57,7 +57,7 @@ void main() {
     blocTest(
       'format exception on type change in json',
       build: () => cubit,
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.localRequest(
           '{"userId" : "1n"}',
           enableLogs: true,
@@ -78,7 +78,7 @@ void main() {
         status: RequestStatus.success,
         model: PostModel(userId: 1, id: 1),
       ),
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.localRequest(
           "{'bad': 1}",
           enableLogs: true,

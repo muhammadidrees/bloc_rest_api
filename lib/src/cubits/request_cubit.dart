@@ -3,7 +3,7 @@ part of 'cubits.dart';
 class RequestCubit<T> extends Cubit<RequestState<T>> {
   RequestCubit({
     this.fromMap,
-    http.Client httpClient,
+    http.Client? httpClient,
   })  : httpClient = httpClient ?? http.Client(),
         super(RequestState<T>.empty());
 
@@ -12,7 +12,7 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
 
   /// A function that converts the given [json] map to
   /// [T] type model
-  final T Function(dynamic json) fromMap;
+  final T Function(dynamic json)? fromMap;
 
   /// Empties out the bloc and emits the empty state
   void emptyCubit() {
@@ -72,12 +72,12 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// Use the [enableLog] flag to show logs for the request in debug
   /// console
   Future<void> getRequest({
-    @required String handle,
-    String baseUrl,
-    Map<String, String> header,
-    T Function(dynamic json) fromMap,
-    Duration timeOut,
-    bool enableLogs,
+    required String handle,
+    String? baseUrl,
+    Map<String, String>? header,
+    T Function(dynamic json)? fromMap,
+    Duration? timeOut,
+    bool? enableLogs,
   }) async {
     // check if fromMap function is provided
     assert((fromMap != null || this.fromMap != null),
@@ -97,10 +97,10 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
             baseUrl: baseUrl,
             header: header,
             timeOut: timeOut,
-            enableLogs: enableLogs,
+            enableLogs: enableLogs!,
           )
           .then(
-            (value) => toModel(fromMap, value),
+            (value) => toModel(fromMap, value)!,
           ),
     );
   }
@@ -123,14 +123,14 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   ///
   /// Use the [enableLog] flag to show logs for the request in debug
   /// console
-  void postRequest({
-    @required String handle,
-    String baseUrl,
-    Map<String, String> header,
+  Future<void> postRequest({
+    required String handle,
+    String? baseUrl,
+    Map<String, String>? header,
     dynamic body,
-    T Function(dynamic json) fromMap,
-    Duration timeOut,
-    bool enableLogs,
+    T Function(dynamic json)? fromMap,
+    Duration? timeOut,
+    bool? enableLogs,
   }) async {
     // check if fromMap function is provided
     assert((fromMap != null || this.fromMap != null),
@@ -150,10 +150,10 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
             header: header,
             body: body,
             timeOut: timeOut,
-            enableLogs: enableLogs,
+            enableLogs: enableLogs!,
           )
           .then(
-            (value) => toModel(fromMap, value),
+            (value) => toModel(fromMap, value)!,
           ),
     );
   }
@@ -162,9 +162,9 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   ///
   /// Use the [enableLog] flag to show logs for the request in debug
   /// console
-  void localRequest(
+  Future<void> localRequest(
     String json, {
-    bool enableLogs = false,
+    bool? enableLogs = false,
   }) async {
     // check if json is provided
     assert(!(['', null].contains(json)), 'JSON string is required!');
@@ -173,10 +173,10 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
       GereralRepository()
           .local(
             json,
-            enableLogs: enableLogs,
+            enableLogs: enableLogs!,
           )
           .then(
-            (value) => toModel(fromMap, value),
+            (value) => toModel(fromMap, value)!,
           ),
     );
   }
@@ -185,12 +185,12 @@ class RequestCubit<T> extends Cubit<RequestState<T>> {
   /// funtion [fromMap] and returns the model
   ///
   /// In case of conversation failure it throws [FormatException]
-  T toModel(T Function(dynamic json) fromMap, Map<String, dynamic> json) {
-    T result;
+  T? toModel(T Function(dynamic json)? fromMap, Map<String, dynamic>? json) {
+    late T result;
     try {
-      result = fromMap?.call(json) ?? this.fromMap.call(json);
+      result = fromMap?.call(json) ?? this.fromMap!.call(json);
     } catch (e) {
-      throw FormatException(e.toString(), result);
+      throw FormatException(e.toString());
     }
     return result;
   }

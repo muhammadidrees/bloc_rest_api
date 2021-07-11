@@ -20,11 +20,11 @@ class FetchDataException extends CustomException {
 }
 
 class BadRequestException extends CustomException {
-  BadRequestException([String message]) : super(message, 'Invalid Request: ');
+  BadRequestException([String? message]) : super(message, 'Invalid Request: ');
 }
 
 class UnauthorisedException extends CustomException {
-  UnauthorisedException([String message]) : super(message, 'Unauthorised: ');
+  UnauthorisedException([String? message]) : super(message, 'Unauthorised: ');
 }
 
 class TimeOutExceptionC extends CustomException {

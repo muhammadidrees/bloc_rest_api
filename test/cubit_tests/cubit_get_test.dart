@@ -8,14 +8,11 @@ import 'package:http/http.dart' as http;
 import 'package:bloc_test/bloc_test.dart';
 
 import '../models/models.dart';
-
-// Create a MockClient using the Mock class provided by the Mockito package.
-// Create new instances of this class in each test.
-class MockClient extends Mock implements http.Client {}
+import '../usage_test.mocks.dart';
 
 void main() {
-  http.Client client;
-  RequestCubit<PostModel> cubit;
+  http.Client? client;
+  late RequestCubit<PostModel> cubit;
 
   setUp(() {
     client = MockClient();
@@ -26,7 +23,7 @@ void main() {
   });
 
   tearDown(() {
-    client.close();
+    client!.close();
     cubit.close();
   });
 
@@ -34,8 +31,8 @@ void main() {
     blocTest(
       'emits [loading, success] on successful request',
       build: () => cubit,
-      act: (bloc) {
-        when(client
+      act: (RequestCubit<PostModel> bloc) {
+        when(client!
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer(
                 (_) async => http.Response(PostModel.singlePostResponse, 200));
@@ -60,8 +57,8 @@ void main() {
     blocTest(
       'emits [loading, failure] on request fail',
       build: () => cubit,
-      act: (bloc) {
-        when(client
+      act: (RequestCubit<PostModel> bloc) {
+        when(client!
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));
 
@@ -84,8 +81,8 @@ void main() {
       'emits [loading, failure] on timeout fail',
       build: () => cubit,
       wait: Duration(milliseconds: 400),
-      act: (bloc) {
-        when(client
+      act: (RequestCubit<PostModel> bloc) {
+        when(client!
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer(
           (_) async {
@@ -114,8 +111,8 @@ void main() {
       'emits [loading, success] when response within timeout',
       build: () => cubit,
       wait: Duration(milliseconds: 200),
-      act: (bloc) {
-        when(client
+      act: (RequestCubit<PostModel> bloc) {
+        when(client!
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer(
           (_) async {
@@ -147,8 +144,8 @@ void main() {
         status: RequestStatus.success,
         model: PostModel(userId: 1, id: 1),
       ),
-      act: (bloc) {
-        when(client
+      act: (RequestCubit<PostModel> bloc) {
+        when(client!
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));
 

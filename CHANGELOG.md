@@ -1,3 +1,9 @@
+# 1.0.0-nullsafety.0
+
+- **BREAKING**: migrated to null safety
+- feat!: upgrade Dart SDK constraints to `>=2.12.0-0 <3.0.0`
+- chore: updated flutter version in CI to latest
+
 # 0.4.0+1
 
 - chore: github action publish issue resolution

@@ -2,7 +2,7 @@ part of 'cubits.dart';
 
 enum RequestStatus { empty, loading, success, failure }
 
-RequestStatus enumFromString(String input) {
+RequestStatus enumFromString(String? input) {
   switch (input) {
     case 'RequestStatus.empty':
       return RequestStatus.empty;
@@ -40,9 +40,9 @@ class RequestState<T> extends Equatable {
   /// This methods helps in persisting the data i.e. [model]
   /// that has once entered the bloc state.
   RequestState<T> copyWith({
-    @required RequestStatus status,
-    T model,
-    String errorMessage,
+    required RequestStatus status,
+    T? model,
+    String? errorMessage,
   }) =>
       RequestState<T>(
         status: status,
@@ -54,18 +54,18 @@ class RequestState<T> extends Equatable {
   /// can be either [RequestStatus.empty],
   /// [RequestStatus.loading], [RequestStatus.success]
   /// or [RequestStatus.failure]
-  final RequestStatus status;
+  final RequestStatus? status;
 
   /// This is the model of type [T] to be
   /// preserved by the bloc state.
-  final T model;
+  final T? model;
 
   /// This contains the error message caught by
   /// request function
-  final String errorMessage;
+  final String? errorMessage;
 
   @override
-  List<Object> get props => [status, model];
+  List<Object?> get props => [status, model];
 
   @override
   String toString() => '${status.toString()} -- ${model.toString()}';

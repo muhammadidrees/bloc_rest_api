@@ -5,7 +5,6 @@ import 'dart:developer' as developer;
 
 import 'package:bloc_rest_api/src/api_config.dart';
 import 'package:bloc_rest_api/src/models/models.dart';
-import 'package:meta/meta.dart';
 import 'package:http/http.dart' as http;
 
 /// General Repository to interact with any REST API
@@ -18,12 +17,12 @@ class GereralRepository {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<Map<String, dynamic>> get(
+  Future<Map<String, dynamic>?> get(
     http.Client client, {
-    @required String handle,
-    String baseUrl,
-    Map<String, String> header,
-    Duration timeOut,
+    required String handle,
+    String? baseUrl,
+    Map<String, String>? header,
+    Duration? timeOut,
     bool enableLogs = false,
   }) async {
     // final url to which call will be made
@@ -49,7 +48,7 @@ class GereralRepository {
       );
     }
 
-    var rawResponse;
+    late var rawResponse;
     var responseJson;
     try {
       rawResponse = await client
@@ -57,7 +56,7 @@ class GereralRepository {
             _uri,
             headers: _header,
           )
-          ?.timeout(_timeOut);
+          .timeout(_timeOut);
       responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
@@ -88,13 +87,13 @@ class GereralRepository {
   /// in the function.
   ///
   /// Same thing applies for the [header] parameter
-  Future<Map<String, dynamic>> post(
+  Future<Map<String, dynamic>?> post(
     http.Client client, {
-    @required String handle,
+    required String handle,
     dynamic body,
-    String baseUrl,
-    Map<String, String> header,
-    Duration timeOut,
+    String? baseUrl,
+    Map<String, String>? header,
+    Duration? timeOut,
     bool enableLogs = false,
   }) async {
     // final url to which call will be made
@@ -132,7 +131,7 @@ class GereralRepository {
             body: body,
             headers: _header,
           )
-          ?.timeout(_timeOut);
+          .timeout(_timeOut);
       responseJson = _response(rawResponse);
     } on SocketException {
       throw FetchDataException();
@@ -154,7 +153,7 @@ class GereralRepository {
   }
 
   /// Used to convert a locally provided [json] String to json Map
-  Future<Map<String, dynamic>> local(
+  Future<Map<String, dynamic>?> local(
     String json, {
     bool enableLogs = false,
   }) async {
@@ -183,7 +182,7 @@ class GereralRepository {
 
   /// gerenal HTTP code responses
   dynamic _response(http.Response response) {
-    switch (response?.statusCode) {
+    switch (response.statusCode) {
       case 200:
         var responseJson = json.decode(response.body.toString());
         // print(responseJson);
@@ -196,7 +195,7 @@ class GereralRepository {
       case 500:
       default:
         throw FetchDataException(
-            'Something went wrong, please try again later.\n\nStatus Code : ${response?.statusCode}');
+            'Something went wrong, please try again later.\n\nStatus Code : ${response.statusCode}');
     }
   }
 }

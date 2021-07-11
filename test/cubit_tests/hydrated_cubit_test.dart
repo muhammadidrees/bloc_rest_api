@@ -11,14 +11,11 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/models.dart';
-
-// Create a MockClient using the Mock class provided by the Mockito package.
-// Create new instances of this class in each test.
-class MockClient extends Mock implements http.Client {}
+import '../usage_test.mocks.dart';
 
 void main() {
-  http.Client client;
-  HydratedRequestCubit<PostModel> cubit;
+  late http.Client client;
+  late HydratedRequestCubit<PostModel> cubit;
 
   setUpAll(() async {
     HydratedBloc.storage = await HydratedStorage.build(
@@ -46,35 +43,11 @@ void main() {
     cubit.close();
   });
 
-  group('assertion checks', () {
-    test('throws an assertion error when toMap is null', () {
-      expect(
-        () => HydratedRequestCubit<PostModel>(
-          fromMap: (json) => PostModel.fromJson(json),
-          toMap: null,
-          httpClient: client,
-        ),
-        throwsAssertionError,
-      );
-    });
-
-    test('throws an assertion error when fromMap is null', () {
-      expect(
-        () => HydratedRequestCubit<PostModel>(
-          fromMap: null,
-          toMap: (model) => model.toJson(),
-          httpClient: client,
-        ),
-        throwsAssertionError,
-      );
-    });
-  });
-
   group('hydrated cubit get request test', () {
     blocTest(
       'emits [loading, success] on successful request',
       build: () => cubit,
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         when(client
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer(
@@ -102,7 +75,7 @@ void main() {
     blocTest(
       'emits [loading, failure] on request fail',
       build: () => cubit,
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         when(client
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));
@@ -139,7 +112,7 @@ void main() {
           jsonDecode(PostModel.singlePostResponse),
         ),
       ),
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.emptyCubit();
       },
       expect: () => [
@@ -158,7 +131,7 @@ void main() {
           jsonDecode(PostModel.singlePostResponse),
         ),
       ),
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         return bloc.updateModel(
           PostModel(userId: 2, id: 2),
         );
@@ -178,7 +151,7 @@ void main() {
         status: RequestStatus.success,
         model: PostModel(userId: 1, id: 1),
       ),
-      act: (bloc) {
+      act: (RequestCubit<PostModel> bloc) {
         when(client
                 .get(Uri.parse('https://jsonplaceholder.typicode.com/posts/1')))
             .thenAnswer((_) async => http.Response('BadRequestException', 400));

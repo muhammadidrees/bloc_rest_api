@@ -8,10 +8,10 @@ class PostModel extends Equatable {
     this.body,
   });
 
-  final int userId;
-  final int id;
-  final String title;
-  final String body;
+  final int? userId;
+  final int? id;
+  final String? title;
+  final String? body;
 
   /// Example json string representation of a single object
   /// used for testing
@@ -56,10 +56,10 @@ class PostModel extends Equatable {
   ''';
 
   PostModel copyWith({
-    int userId,
-    int id,
-    String title,
-    String body,
+    int? userId,
+    int? id,
+    String? title,
+    String? body,
   }) =>
       PostModel(
         userId: userId ?? this.userId,
@@ -83,7 +83,7 @@ class PostModel extends Equatable {
       };
 
   @override
-  List<Object> get props => [
+  List<Object?> get props => [
         userId,
       ];
 

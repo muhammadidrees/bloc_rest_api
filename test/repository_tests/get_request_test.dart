@@ -6,9 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:http/http.dart' as http;
 
-// Create a MockClient using the Mock class provided by the Mockito package.
-// Create new instances of this class in each test.
-class MockClient extends Mock implements http.Client {}
+import '../usage_test.mocks.dart';
 
 void main() {
   group('get request', () {
